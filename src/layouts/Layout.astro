@@ -1,0 +1,95 @@
+---
+import '../styles/global.css';
+import fs from 'node:fs';
+import path from 'node:path';
+import { getSiteConfig, toCanonicalUrl, toPublicUrl } from '../../site.config.mjs';
+import { withBase } from '../utils/withBase';
+
+interface Props {
+  title?: string;
+  description?: string;
+  lang?: string;
+  canonical?: string | URL;
+  noindex?: boolean;
+  structuredData?: Record<string, unknown> | Array<Record<string, unknown>> | null;
+}
+
+const {
+  title = 'KAfit Store',
+  description = 'Fitness és wellness termékek, sporteszközök és személyre szabott támogatás.',
+  lang = 'hu',
+  canonical,
+  noindex = false,
+  structuredData = null,
+} = Astro.props;
+
+const { site: fallbackSite } = getSiteConfig();
+const siteUrl = Astro.site?.toString() || fallbackSite;
+const siteName = 'KAfit Store';
+const pageTitle = typeof title === 'string' && title.trim() ? title.trim() : siteName;
+const fullTitle = pageTitle.includes(siteName) ? pageTitle : `${pageTitle} | ${siteName}`;
+const metaDescription =
+  typeof description === 'string' && description.trim() ? description.trim() : 'Fitness és wellness termékek, sporteszközök és személyre szabott támogatás.';
+const canonicalUrl = toCanonicalUrl(canonical ?? Astro.url, siteUrl);
+const robotsContent = noindex
+  ? 'noindex,nofollow'
+  : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1';
+const faviconFilePath = path.resolve('public/favicon.svg');
+const faviconHref = fs.existsSync(faviconFilePath) ? withBase('/favicon.svg') : '';
+const faviconUrl = faviconHref ? toPublicUrl(faviconHref, siteUrl, '/') : '';
+const localeCode = lang === 'hu' ? 'hu_HU' : lang;
+
+const enrichStructuredEntry = (value: Record<string, unknown>) => {
+  const entry = { ...value };
+
+  if (typeof entry.name !== 'string' || !entry.name.trim()) {
+    entry.name = siteName;
+  }
+
+  if (typeof entry.url !== 'string' || !entry.url.trim()) {
+    entry.url = canonicalUrl;
+  }
+
+  return entry;
+};
+
+const resolvedStructuredData = Array.isArray(structuredData)
+  ? structuredData.map((entry) => enrichStructuredEntry(entry))
+  : structuredData && typeof structuredData === 'object'
+    ? enrichStructuredEntry(structuredData)
+    : null;
+
+const serializedStructuredData = resolvedStructuredData ? JSON.stringify(resolvedStructuredData) : null;
+---
+
+<!doctype html>
+<html lang={lang} class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={metaDescription} />
+    <meta name="robots" content={robotsContent} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:locale" content={localeCode} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={metaDescription} />
+    <meta property="og:url" content={canonicalUrl} />
+    {faviconUrl && <meta property="og:image" content={faviconUrl} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={metaDescription} />
+    {faviconUrl && <meta name="twitter:image" content={faviconUrl} />}
+    <title>{fullTitle}</title>
+    {faviconHref && <link rel="icon" href={faviconHref} type="image/svg+xml" />}
+    {faviconHref && <link rel="shortcut icon" href={faviconHref} type="image/svg+xml" />}
+    {faviconHref && <link rel="apple-touch-icon" href={faviconHref} />}
+    {serializedStructuredData && (
+      <script is:inline type="application/ld+json" set:html={serializedStructuredData} />
+    )}
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

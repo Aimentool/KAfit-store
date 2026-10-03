@@ -1,0 +1,264 @@
+---
+import { withBase } from '../../utils/withBase';
+
+const { navigationConfig, themeConfig } = Astro.props;
+
+type MenuItem = {
+  link?: string;
+  text?: string;
+  type?: 'link' | 'cta_button' | 'anchor';
+  highlight_effect?: string;
+  custom_html?: string;
+  override_color?: string;
+};
+
+type NavConfig = {
+  settings?: {
+    background?: {
+      use_global_theme?: boolean;
+      custom_color?: string;
+      transparency?: {
+        enable?: boolean;
+        opacity_percent?: number;
+        blur_effect?: string;
+      };
+    };
+    behavior?: {
+      sticky?: boolean;
+      hide_on_scroll_down?: boolean;
+      show_on_scroll_up?: boolean;
+    };
+    layout?: {
+      width?: string;
+      padding_y?: string;
+      padding_x?: string;
+      content_alignment?: string;
+    };
+  };
+  logo?: {
+    image_source?: string;
+    height_class?: string;
+    brand_text?: {
+      show?: boolean;
+      mode?: 'text' | 'image';
+      text?: string;
+      custom_image_path?: string;
+      color_override?: string;
+    };
+  };
+  menu_items?: MenuItem[];
+};
+
+const navConfig = (navigationConfig ?? {}) as NavConfig;
+const theme = (themeConfig ?? {}) as { colors?: { background?: string } };
+
+const settings = navConfig?.settings || {};
+const logo = navConfig?.logo || {};
+const menuItems: MenuItem[] = navConfig?.menu_items ?? [];
+
+const baseBackground = settings.background?.use_global_theme
+  ? theme.colors?.background || 'var(--component-navbar-background)'
+  : settings.background?.custom_color || 'var(--component-navbar-background)';
+
+const transparency = settings.background?.transparency;
+const opacityPercent = transparency?.enable
+  ? Math.min(Math.max(transparency.opacity_percent ?? 90, 0), 100)
+  : 100;
+const blur = transparency?.enable ? transparency.blur_effect || 'backdrop-blur-md' : '';
+
+const maxWidth = settings.layout?.width || '100%';
+const alignment = settings.layout?.content_alignment || 'justify-between';
+const paddingY = settings.layout?.padding_y || '15px';
+const paddingX = settings.layout?.padding_x || '20px';
+const logoHeight = logo.height_class || 'h-10';
+
+const navBg = `color-mix(in srgb, ${baseBackground} ${opacityPercent}%, transparent)`;
+const menuSurface = 'var(--component-navbar-menu-surface)';
+const brandTextColor = logo.brand_text?.color_override || 'var(--component-navbar-link-text)';
+const homeHref = withBase('/');
+const logoImageSource = logo.image_source ? withBase(logo.image_source) : '';
+const brandTextImageSource = logo.brand_text?.custom_image_path ? withBase(logo.brand_text.custom_image_path) : '';
+
+const getLinkClass = (item: MenuItem) => {
+  const base =
+    'nav-link block rounded px-3 py-2 text-sm font-medium tracking-wide transition-all duration-300';
+
+  if (item.type === 'cta_button') {
+    return `${base} nav-link--cta`;
+  }
+  if (item.highlight_effect === 'spotlight') {
+    return `${base} nav-link--spotlight`;
+  }
+  if (item.highlight_effect === 'glow') {
+    return `${base} nav-link--glow`;
+  }
+  return `${base} nav-link--default`;
+};
+---
+
+<nav
+  id="master-navbar"
+  class={`fixed start-0 top-0 z-50 w-full border-b transition-transform duration-300 ${blur}`}
+  style={`
+    --nav-bg: ${navBg};
+    --nav-menu-surface: ${menuSurface};
+    --nav-border: var(--component-navbar-border);
+    --nav-text: var(--component-navbar-link-text);
+    --nav-muted: var(--color-muted);
+    --nav-accent: var(--component-navbar-link-hover);
+    --nav-primary: var(--component-navbar-cta-bg);
+    --nav-primary-contrast: var(--component-navbar-cta-text);
+    background-color: var(--nav-bg);
+    border-color: var(--nav-border);
+  `}
+>
+  <div
+    class={`mx-auto flex flex-wrap items-center ${alignment}`}
+    style={`width: ${maxWidth}; padding-top: ${paddingY}; padding-bottom: ${paddingY}; padding-left: ${paddingX}; padding-right: ${paddingX};`}
+  >
+    <a href={homeHref} class="group flex items-center gap-3">
+      {logoImageSource && (
+        <img
+          src={logoImageSource}
+          class={`${logoHeight} w-auto object-contain transition-transform duration-300 group-hover:scale-105`}
+          alt="Logo"
+        />
+      )}
+
+      {logo.brand_text?.show && (
+        logo.brand_text.mode === 'image' ? (
+          <img src={brandTextImageSource} alt={logo.brand_text.text} class="h-8 w-auto object-contain" />
+        ) : (
+          <span class="self-center whitespace-nowrap text-xl font-black uppercase tracking-wider" style={`color: ${brandTextColor};`}>
+            {logo.brand_text?.text}
+          </span>
+        )
+      )}
+    </a>
+
+    <button
+      id="mobile-menu-toggle"
+      type="button"
+      class="inline-flex h-10 w-10 items-center justify-center rounded-lg p-2 focus:outline-none md:hidden"
+      style="color: var(--nav-muted);"
+    >
+      <span class="sr-only">Menu</span>
+      <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"></path>
+      </svg>
+    </button>
+
+    <div class="hidden w-full md:flex md:w-auto" id="navbar-menu">
+      <ul
+        class="mt-4 flex flex-col items-center rounded-lg border p-4 font-medium md:mt-0 md:flex-row md:space-x-8 md:border-0 md:bg-transparent md:p-0"
+        style="background: var(--nav-menu-surface); border-color: var(--nav-border);"
+      >
+        {menuItems.map((item: MenuItem, index: number) => (
+          <li>
+            {item.custom_html ? (
+              (() => {
+                const uniqueId = `nav-custom-${index}`;
+                const forceColor = item.override_color;
+
+                return (
+                  <div id={uniqueId} class="nav-custom-wrapper relative">
+                    <div set:html={item.custom_html} />
+
+                    {forceColor && (
+                      <script is:inline define:vars={{ uid: uniqueId, col: forceColor }}>
+                        const style = document.createElement('style');
+                        style.innerHTML = `
+                          #${uid} * {
+                            background-color: ${col} !important;
+                            border-color: ${col} !important;
+                            color: var(--color-text) !important;
+                            fill: ${col} !important;
+                            box-shadow: none !important;
+                          }
+                        `;
+                        document.getElementById(uid)?.appendChild(style);
+                      </script>
+                    )}
+                  </div>
+                );
+              })()
+            ) : (
+              <a href={withBase(item.link)} class={getLinkClass(item)}>
+                {item.text}
+              </a>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<script is:inline define:vars={{ hideDown: settings.behavior?.hide_on_scroll_down || false, showUp: settings.behavior?.show_on_scroll_up || false }}>
+  const btn = document.getElementById('mobile-menu-toggle');
+  const menu = document.getElementById('navbar-menu');
+  if (btn && menu) btn.addEventListener('click', () => menu.classList.toggle('hidden'));
+
+  let lastScroll = 0;
+  const nav = document.getElementById('master-navbar');
+
+  window.addEventListener('scroll', () => {
+    if (!hideDown || !nav) return;
+
+    const currentScroll = window.pageYOffset;
+    if (currentScroll > lastScroll && currentScroll > 100) {
+      nav.style.transform = 'translateY(-100%)';
+    } else if (showUp || currentScroll < 100) {
+      nav.style.transform = 'translateY(0)';
+    }
+    lastScroll = currentScroll <= 0 ? 0 : currentScroll;
+  });
+</script>
+
+<style>
+  .nav-link {
+    color: var(--nav-text);
+    font-family: var(--font-ui);
+  }
+
+  .nav-link--default:hover,
+  .nav-link--glow:hover {
+    color: var(--nav-accent);
+  }
+
+  .nav-link--spotlight {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nav-link--spotlight::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    transform: translateY(3px);
+    transition: transform var(--motion-duration) var(--motion-easing);
+    background: var(--nav-accent);
+  }
+
+  .nav-link--spotlight:hover::after {
+    transform: translateY(0);
+  }
+
+  .nav-link--cta {
+    border: 1px solid var(--nav-primary);
+    border-radius: var(--component-button-radius);
+    background: var(--nav-primary);
+    color: var(--nav-primary-contrast);
+    padding-inline: var(--component-button-padding-x);
+    padding-block: var(--component-button-padding-y);
+  }
+
+  .nav-link--cta:hover {
+    background: var(--nav-accent);
+    border-color: var(--nav-accent);
+    transform: scale(1.05);
+  }
+</style>

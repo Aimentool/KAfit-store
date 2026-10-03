@@ -1,0 +1,35 @@
+{
+  "settings": {
+    "background": {
+      "use_global_theme": true,
+      "custom_color": "var(--color-background)",
+      "transparency": {
+        "enable": true,
+        "opacity_percent": 80,
+        "blur_effect": "backdrop-blur-md"
+      }
+    },
+    "behavior": {
+      "sticky": true,
+      "hide_on_scroll_down": true,
+      "show_on_scroll_up": true
+    },
+    "layout": {
+      "width": "90%",
+      "padding_y": "15px",
+      "padding_x": "0px",
+      "content_alignment": "justify-between"
+    }
+  },
+  "logo": {
+    "image_source": "",
+    "height_class": "h-10",
+    "brand_text": {
+      "show": true,
+      "mode": "text",
+      "text": "Brand Neve",
+      "color_override": "var(--color-text)"
+    }
+  },
+  "menu_items": []
+}

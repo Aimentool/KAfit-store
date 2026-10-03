@@ -1,0 +1,92 @@
+{
+  "settings": {
+    "enabled": true,
+    "height": {
+      "desktop": "100vh",
+      "mobile": "100vh"
+    },
+    "overlay": "dark",
+    "transition": "none"
+  },
+  "media": {
+    "type": "image",
+    "source_desktop": "/assets/hero.jpg",
+    "source_mobile": "",
+    "poster_image": "",
+    "partner_logos": [],
+    "video_settings": {
+      "loop": true,
+      "autoplay": true,
+      "muted": true,
+      "playback_speed": 1,
+      "object_fit": "cover"
+    }
+  },
+  "slots": {
+    "badge": {
+      "text": "",
+      "lines": 1,
+      "size": 100,
+      "x": 50,
+      "y": 20
+    },
+    "title": {
+      "text": "Fresh Thinking. Automated Growth.",
+      "lines": 2,
+      "size": 100,
+      "x": 50,
+      "y": 32
+    },
+    "subtitle": {
+      "text": "A tisztitott Alap sablon azonnal indithato.",
+      "lines": 2,
+      "size": 100,
+      "x": 50,
+      "y": 50
+    },
+    "cta1": {
+      "text": "Kapcsolat",
+      "link": "#hero",
+      "style": "primary",
+      "size": 100,
+      "x": 50,
+      "y": 68
+    },
+    "cta2": {
+      "text": "",
+      "link": "#",
+      "style": "outline",
+      "size": 100,
+      "x": 50,
+      "y": 68
+    },
+    "socialProof": {
+      "type": "text",
+      "text": "500+ elegedett ugyfel",
+      "size": 100,
+      "x": 50,
+      "y": 90
+    },
+    "countdown": {
+      "target_date": "",
+      "label": "",
+      "size": 100,
+      "x": 50,
+      "y": 80
+    },
+    "scrollIndicator": {
+      "show": true
+    }
+  },
+  "responsive": {
+    "mobile": {
+      "slots": {}
+    }
+  },
+  "theme": {
+    "fonts": {
+      "heading": "var(--font-heading)",
+      "body": "var(--font-body)"
+    }
+  }
+}

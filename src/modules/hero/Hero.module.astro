@@ -1,0 +1,640 @@
+---
+import { withBase } from '../../utils/withBase';
+
+const { heroConfig } = Astro.props;
+const { settings = {}, media = {}, slots = {}, responsive = {}, theme = {} } = heroConfig as Record<string, any>;
+
+if (!settings.enabled) return;
+
+const safeMin = 5;
+const safeMax = 95;
+
+const clamp = (value: unknown, min: number, max: number, fallback: number) => {
+  if (typeof value !== 'number' || Number.isNaN(value)) return fallback;
+  return Math.min(Math.max(value, min), max);
+};
+
+const hasText = (value: unknown) => typeof value === 'string' && value.trim() !== '';
+const isVideoPath = (value: unknown) => hasText(value) && /\.mp4($|\?)/i.test(String(value));
+const mergeSlot = (base: Record<string, any>, override: Record<string, any> | undefined) => ({
+  ...base,
+  ...(override ?? {}),
+});
+
+const positionStyle = (slot: Record<string, any> | undefined, fallbackY: number) => {
+  const x = clamp(slot?.x, safeMin, safeMax, 50);
+  const y = clamp(slot?.y, safeMin, safeMax, fallbackY);
+  return `left:${x}%;top:${y}%;transform:translate(-50%,-50%);`;
+};
+
+const textScaleStyle = (
+  slot: Record<string, any> | undefined,
+  preset: { min: number; vw: number; max: number },
+  fallbackLines = 1
+) => {
+  const lines = clamp(slot?.lines, 1, 5, fallbackLines);
+  const size = clamp(slot?.size, 10, 300, 100) / 100;
+  const lineFactor = 1 / Math.sqrt(lines);
+  const min = (preset.min * lineFactor).toFixed(3);
+  const vw = (preset.vw * lineFactor).toFixed(3);
+  const max = (preset.max * lineFactor).toFixed(3);
+  return `font-size: calc(clamp(${min}rem, ${vw}vw, ${max}rem) * ${size});`;
+};
+
+const ctaScaleStyle = (slot: Record<string, any> | undefined) => {
+  const size = clamp(slot?.size, 10, 300, 100) / 100;
+  return `font-size: calc(clamp(0.85rem, 1.1vw, 1.05rem) * ${size});`;
+};
+
+const mediaType = media.type === 'video' ? 'video' : 'image';
+const desktopSource = withBase(media.source_desktop || '');
+const mobileSource = withBase(media.source_mobile || '');
+const hasMobileSource = hasText(mobileSource);
+const mobileSourceIsVideo = isVideoPath(mobileSource);
+const posterImage = withBase(media.poster_image || '');
+const objectFit = media.video_settings?.object_fit === 'contain' ? 'contain' : 'cover';
+const desktopFallbackSource = desktopSource || posterImage || withBase('/assets/hero.jpg');
+const videoPoster = posterImage || desktopFallbackSource;
+const partnerLogos = Array.isArray(media.partner_logos)
+  ? media.partner_logos
+      .filter((entry: unknown): entry is string => hasText(entry))
+      .map((entry: string) => withBase(entry))
+  : [];
+
+const badgeSlot = slots.badge ?? {};
+const titleSlot = slots.title ?? {};
+const subtitleSlot = slots.subtitle ?? {};
+const cta1Slot = slots.cta1 ?? {};
+const cta2Slot = slots.cta2 ?? {};
+const socialSlot = slots.socialProof ?? {};
+const countdownSlot = slots.countdown ?? {};
+const scrollSlot = slots.scrollIndicator ?? {};
+
+const mobileSlotOverrides = responsive.mobile?.slots ?? {};
+const mobileBadgeSlot = mergeSlot(badgeSlot, mobileSlotOverrides.badge);
+const mobileTitleSlot = mergeSlot(titleSlot, mobileSlotOverrides.title);
+const mobileSubtitleSlot = mergeSlot(subtitleSlot, mobileSlotOverrides.subtitle);
+const mobileCta1Slot = mergeSlot(cta1Slot, mobileSlotOverrides.cta1);
+const mobileCta2Slot = mergeSlot(cta2Slot, mobileSlotOverrides.cta2);
+const mobileSocialSlot = mergeSlot(socialSlot, mobileSlotOverrides.socialProof);
+const mobileCountdownSlot = mergeSlot(countdownSlot, mobileSlotOverrides.countdown);
+const mobileScrollSlot = mergeSlot(scrollSlot, mobileSlotOverrides.scrollIndicator);
+
+const showBadge = hasText(badgeSlot.text);
+const showTitle = hasText(titleSlot.text);
+const showSubtitle = hasText(subtitleSlot.text);
+const showCta1 = hasText(cta1Slot.text);
+const showCta2 = hasText(cta2Slot.text);
+const showCountdown = hasText(countdownSlot.target_date);
+const showSocialText = socialSlot.type !== 'logos' && hasText(socialSlot.text);
+const showSocialLogos = socialSlot.type === 'logos' && partnerLogos.length > 0;
+const showScrollIndicator = Boolean(scrollSlot.show);
+
+const showMobileBadge = hasText(mobileBadgeSlot.text);
+const showMobileTitle = hasText(mobileTitleSlot.text);
+const showMobileSubtitle = hasText(mobileSubtitleSlot.text);
+const showMobileCta1 = hasText(mobileCta1Slot.text);
+const showMobileCta2 = hasText(mobileCta2Slot.text);
+const showMobileCountdown = hasText(mobileCountdownSlot.target_date);
+const showMobileSocialText = mobileSocialSlot.type !== 'logos' && hasText(mobileSocialSlot.text);
+const showMobileSocialLogos = mobileSocialSlot.type === 'logos' && partnerLogos.length > 0;
+const showMobileScrollIndicator = Boolean(mobileScrollSlot.show);
+
+const overlayPreset = settings.overlay || 'dark';
+const transitionPreset = settings.transition || 'none';
+
+const headingFont = theme.fonts?.heading || 'var(--font-heading)';
+const bodyFont = theme.fonts?.body || 'var(--font-body)';
+const mediaAlt = hasText(titleSlot.text) ? titleSlot.text : 'Hero media';
+
+const ctaClass = (slot: Record<string, any>) => {
+  const style = slot?.style || 'primary';
+  if (style === 'secondary') return 'hero-cta hero-cta--secondary';
+  if (style === 'outline') return 'hero-cta hero-cta--outline';
+  return 'hero-cta hero-cta--primary';
+};
+---
+
+<section
+  id="hero-root"
+  class="hero relative w-full overflow-hidden"
+  style={`
+    --hero-height-mobile: ${settings.height?.mobile || '100vh'};
+    --hero-height-desktop: ${settings.height?.desktop || '100vh'};
+  `}
+>
+  <div class="hero-media absolute inset-0 z-0 overflow-hidden">
+    {mediaType === 'video' && hasText(desktopSource) ? (
+      mobileSourceIsVideo ? (
+        <>
+          <video
+            class="h-full w-full md:hidden"
+            autoplay={media.video_settings?.autoplay ?? true}
+            muted={media.video_settings?.muted ?? true}
+            loop={media.video_settings?.loop ?? true}
+            playsinline
+            preload="metadata"
+            poster={videoPoster}
+            style={`object-fit:${objectFit};`}
+            data-hero-video
+          >
+            <source src={mobileSource} type="video/mp4" />
+          </video>
+          <video
+            id="hero-main-video"
+            class="hidden h-full w-full md:block"
+            autoplay={media.video_settings?.autoplay ?? true}
+            muted={media.video_settings?.muted ?? true}
+            loop={media.video_settings?.loop ?? true}
+            playsinline
+            preload="metadata"
+            poster={videoPoster}
+            style={`object-fit:${objectFit};`}
+            data-hero-video
+          >
+            <source src={desktopSource} type="video/mp4" />
+          </video>
+        </>
+      ) : (
+        <video
+          id="hero-main-video"
+          class="h-full w-full"
+          autoplay={media.video_settings?.autoplay ?? true}
+          muted={media.video_settings?.muted ?? true}
+          loop={media.video_settings?.loop ?? true}
+          playsinline
+          preload="metadata"
+          poster={videoPoster}
+          style={`object-fit:${objectFit};`}
+          data-hero-video
+        >
+          <source src={desktopSource} type="video/mp4" />
+        </video>
+      )
+    ) : mobileSourceIsVideo ? (
+      <div class="h-full w-full">
+        <video
+          class="h-full w-full md:hidden"
+          autoplay={media.video_settings?.autoplay ?? true}
+          muted={media.video_settings?.muted ?? true}
+          loop={media.video_settings?.loop ?? true}
+          playsinline
+          preload="metadata"
+          poster={videoPoster}
+          style={`object-fit:${objectFit};`}
+          data-hero-video
+        >
+          <source src={mobileSource} type="video/mp4" />
+        </video>
+        <img
+          src={desktopFallbackSource}
+          alt={mediaAlt}
+          class="hidden h-full w-full md:block"
+          style="object-fit:cover; object-position:center;"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </div>
+    ) : (
+      <picture>
+        {hasMobileSource && <source media="(max-width: 768px)" srcset={mobileSource} />}
+        <img
+          src={desktopSource || mobileSource || withBase('/assets/hero.jpg')}
+          alt={mediaAlt}
+          class="h-full w-full"
+          style="object-fit:cover; object-position:center;"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </picture>
+    )}
+  </div>
+
+  <div class={`hero-overlay hero-overlay--${overlayPreset} absolute inset-0 z-10`}></div>
+
+  {transitionPreset !== 'none' && (
+    <div class={`hero-transition hero-transition--${transitionPreset} absolute inset-x-0 bottom-0 z-20`} aria-hidden="true">
+      {transitionPreset === 'wave' && (
+        <svg class="hero-transition-wave" viewBox="0 0 1440 160" preserveAspectRatio="none">
+          <path
+            d="M0,64 C180,128 360,0 540,48 C720,96 900,160 1080,112 C1260,64 1350,32 1440,64 L1440,160 L0,160 Z"
+            fill="currentColor"
+          ></path>
+        </svg>
+      )}
+    </div>
+  )}
+
+  <div class="hero-content relative z-30 h-full w-full pointer-events-none">
+    {showBadge && (
+      <p
+        class="hero-slot hero-badge absolute hidden pointer-events-auto text-center md:block"
+        style={`${positionStyle(badgeSlot, 20)} ${textScaleStyle(badgeSlot, { min: 0.75, vw: 1.5, max: 0.95 })} font-family:${bodyFont};`}
+      >
+        {badgeSlot.text}
+      </p>
+    )}
+
+    {showMobileBadge && (
+      <p
+        class="hero-slot hero-badge absolute pointer-events-auto text-center md:hidden"
+        style={`${positionStyle(mobileBadgeSlot, 20)} ${textScaleStyle(mobileBadgeSlot, { min: 0.75, vw: 1.5, max: 0.95 })} font-family:${bodyFont};`}
+      >
+        {mobileBadgeSlot.text}
+      </p>
+    )}
+
+    {showTitle && (
+      <h1
+        class="hero-slot hero-title absolute hidden pointer-events-auto text-center md:block"
+        style={`${positionStyle(titleSlot, 30)} ${textScaleStyle(titleSlot, { min: 1.6, vw: 8.2, max: 6.2 }, 2)} font-family:${headingFont};`}
+      >
+        {titleSlot.text}
+      </h1>
+    )}
+
+    {showMobileTitle && (
+      <h1
+        class="hero-slot hero-title absolute pointer-events-auto text-center md:hidden"
+        style={`${positionStyle(mobileTitleSlot, 30)} ${textScaleStyle(mobileTitleSlot, { min: 1.6, vw: 8.2, max: 6.2 }, 2)} font-family:${headingFont};`}
+      >
+        {mobileTitleSlot.text}
+      </h1>
+    )}
+
+    {showSubtitle && (
+      <p
+        class="hero-slot hero-subtitle absolute hidden pointer-events-auto text-center md:block"
+        style={`${positionStyle(subtitleSlot, 50)} ${textScaleStyle(subtitleSlot, { min: 0.95, vw: 4.2, max: 2.2 }, 2)} font-family:${bodyFont};`}
+      >
+        {subtitleSlot.text}
+      </p>
+    )}
+
+    {showMobileSubtitle && (
+      <p
+        class="hero-slot hero-subtitle absolute pointer-events-auto text-center md:hidden"
+        style={`${positionStyle(mobileSubtitleSlot, 50)} ${textScaleStyle(mobileSubtitleSlot, { min: 0.95, vw: 4.2, max: 2.2 }, 2)} font-family:${bodyFont};`}
+      >
+        {mobileSubtitleSlot.text}
+      </p>
+    )}
+
+    {(showCta1 || showCta2) && (
+      <div class="hero-slot absolute hidden pointer-events-auto flex-wrap items-center justify-center gap-3 md:flex" style={positionStyle(cta1Slot, 68)}>
+        {showCta1 && (
+          <a href={withBase(cta1Slot.link || '#')} class={ctaClass(cta1Slot)} style={`${ctaScaleStyle(cta1Slot)} font-family:${bodyFont};`}>
+            {cta1Slot.text}
+          </a>
+        )}
+        {showCta2 && (
+          <a href={withBase(cta2Slot.link || '#')} class={ctaClass(cta2Slot)} style={`${ctaScaleStyle(cta2Slot)} font-family:${bodyFont};`}>
+            {cta2Slot.text}
+          </a>
+        )}
+      </div>
+    )}
+
+    {(showMobileCta1 || showMobileCta2) && (
+      <div class="hero-slot absolute flex pointer-events-auto flex-wrap items-center justify-center gap-3 md:hidden" style={positionStyle(mobileCta1Slot, 68)}>
+        {showMobileCta1 && (
+          <a href={withBase(mobileCta1Slot.link || '#')} class={ctaClass(mobileCta1Slot)} style={`${ctaScaleStyle(mobileCta1Slot)} font-family:${bodyFont};`}>
+            {mobileCta1Slot.text}
+          </a>
+        )}
+        {showMobileCta2 && (
+          <a href={withBase(mobileCta2Slot.link || '#')} class={ctaClass(mobileCta2Slot)} style={`${ctaScaleStyle(mobileCta2Slot)} font-family:${bodyFont};`}>
+            {mobileCta2Slot.text}
+          </a>
+        )}
+      </div>
+    )}
+
+    {showSocialText && (
+      <p
+        class="hero-slot hero-social absolute hidden pointer-events-auto text-center md:block"
+        style={`${positionStyle(socialSlot, 90)} ${textScaleStyle(socialSlot, { min: 0.78, vw: 1.8, max: 1.05 })} font-family:${bodyFont};`}
+      >
+        {socialSlot.text}
+      </p>
+    )}
+
+    {showMobileSocialText && (
+      <p
+        class="hero-slot hero-social absolute pointer-events-auto text-center md:hidden"
+        style={`${positionStyle(mobileSocialSlot, 90)} ${textScaleStyle(mobileSocialSlot, { min: 0.78, vw: 1.8, max: 1.05 })} font-family:${bodyFont};`}
+      >
+        {mobileSocialSlot.text}
+      </p>
+    )}
+
+    {showSocialLogos && (
+      <div class="hero-slot hero-social-logos absolute hidden pointer-events-auto flex-wrap items-center justify-center gap-4 md:flex" style={positionStyle(socialSlot, 90)}>
+        {partnerLogos.map((logoPath: string) => (
+          <img src={logoPath} alt="Partner logo" loading="lazy" decoding="async" class="h-7 w-auto object-contain opacity-85" />
+        ))}
+      </div>
+    )}
+
+    {showMobileSocialLogos && (
+      <div class="hero-slot hero-social-logos absolute flex pointer-events-auto flex-wrap items-center justify-center gap-4 md:hidden" style={positionStyle(mobileSocialSlot, 90)}>
+        {partnerLogos.map((logoPath: string) => (
+          <img src={logoPath} alt="Partner logo" loading="lazy" decoding="async" class="h-7 w-auto object-contain opacity-85" />
+        ))}
+      </div>
+    )}
+
+    {showCountdown && (
+      <div
+        id="hero-countdown"
+        class="hero-slot hero-countdown absolute hidden pointer-events-auto text-center md:block"
+        style={`${positionStyle(countdownSlot, 80)} ${textScaleStyle(countdownSlot, { min: 0.85, vw: 2.2, max: 1.15 })} font-family:${bodyFont};`}
+        aria-live="polite"
+        data-target={countdownSlot.target_date}
+      >
+        {hasText(countdownSlot.label) && <p class="hero-countdown-label">{countdownSlot.label}</p>}
+        <p class="hero-countdown-value">--d --h --m --s</p>
+      </div>
+    )}
+
+    {showMobileCountdown && (
+      <div
+        id="hero-countdown-mobile"
+        class="hero-slot hero-countdown absolute pointer-events-auto text-center md:hidden"
+        style={`${positionStyle(mobileCountdownSlot, 80)} ${textScaleStyle(mobileCountdownSlot, { min: 0.85, vw: 2.2, max: 1.15 })} font-family:${bodyFont};`}
+        aria-live="polite"
+        data-target={mobileCountdownSlot.target_date}
+      >
+        {hasText(mobileCountdownSlot.label) && <p class="hero-countdown-label">{mobileCountdownSlot.label}</p>}
+        <p class="hero-countdown-value">--d --h --m --s</p>
+      </div>
+    )}
+
+    {showScrollIndicator && (
+      <a href={withBase('#next')} class="hero-scroll-indicator pointer-events-auto hidden md:block" aria-label="Gorgetes lejjebb">
+        <span class="hero-scroll-arrow"></span>
+      </a>
+    )}
+
+    {showMobileScrollIndicator && (
+      <a href={withBase('#next')} class="hero-scroll-indicator pointer-events-auto md:hidden" aria-label="Gorgetes lejjebb">
+        <span class="hero-scroll-arrow"></span>
+      </a>
+    )}
+  </div>
+</section>
+
+{(showCountdown || showMobileCountdown) && (
+  <script is:inline>
+    (() => {
+      const containers = ['hero-countdown', 'hero-countdown-mobile']
+        .map((id) => document.getElementById(id))
+        .filter(Boolean);
+      if (containers.length === 0) return;
+
+      containers.forEach((container) => {
+        const targetRaw = container?.getAttribute('data-target');
+        if (!targetRaw) return;
+
+        const target = new Date(targetRaw).getTime();
+        if (Number.isNaN(target)) return;
+
+        const valueNode = container?.querySelector('.hero-countdown-value');
+        if (!valueNode) return;
+
+        const render = () => {
+          const now = Date.now();
+          const diff = target - now;
+          if (diff <= 0) {
+            valueNode.textContent = 'Lejart';
+            return false;
+          }
+          const days = Math.floor(diff / 86400000);
+          const hours = Math.floor((diff % 86400000) / 3600000);
+          const minutes = Math.floor((diff % 3600000) / 60000);
+          const seconds = Math.floor((diff % 60000) / 1000);
+          valueNode.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+          return true;
+        };
+
+        if (!render()) return;
+        const timer = window.setInterval(() => {
+          if (!render()) window.clearInterval(timer);
+        }, 1000);
+      });
+    })();
+  </script>
+)}
+
+{(mediaType === 'video' || mobileSourceIsVideo) && (
+  <script is:inline define:vars={{ speed: media.video_settings?.playback_speed ?? 1 }}>
+    (() => {
+      const videos = document.querySelectorAll('video[data-hero-video]');
+      if (videos.length === 0) return;
+      videos.forEach((video) => {
+        video.playbackRate = speed;
+      });
+    })();
+  </script>
+)}
+
+<style>
+  .hero {
+    height: var(--hero-height-mobile);
+    background: var(--color-background);
+  }
+
+  @media (min-width: 768px) {
+    .hero {
+      height: var(--hero-height-desktop);
+    }
+  }
+
+  .hero-slot {
+    width: min(92vw, 1200px);
+    color: var(--color-text);
+    text-wrap: balance;
+  }
+
+  .hero-badge {
+    width: auto;
+    border-radius: var(--component-badge-radius);
+    padding: var(--component-badge-padding-y) var(--component-badge-padding-x);
+    letter-spacing: 0.04em;
+    background: var(--component-badge-background);
+    border: 1px solid var(--component-badge-border);
+    color: var(--component-badge-text);
+  }
+
+  .hero-title {
+    font-weight: 800;
+    line-height: 1.1;
+    text-shadow: 0 10px 30px color-mix(in srgb, var(--color-background) 70%, transparent);
+  }
+
+  .hero-subtitle {
+    color: var(--color-muted);
+    line-height: 1.45;
+    text-shadow: 0 8px 20px color-mix(in srgb, var(--color-background) 65%, transparent);
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--component-button-radius);
+    padding: var(--component-button-padding-y) var(--component-button-padding-x);
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: 0.03em;
+    box-shadow: var(--component-button-shadow);
+    transition: transform var(--motion-duration) var(--motion-easing),
+      background-color var(--motion-duration) var(--motion-easing),
+      color var(--motion-duration) var(--motion-easing),
+      border-color var(--motion-duration) var(--motion-easing);
+  }
+
+  .hero-cta:hover {
+    transform: translateY(-1px);
+  }
+
+  .hero-cta--primary {
+    background: var(--component-button-primary-bg);
+    color: var(--component-button-primary-text);
+    border: 1px solid var(--component-button-primary-bg);
+  }
+
+  .hero-cta--secondary {
+    background: var(--component-button-secondary-bg);
+    color: var(--component-button-secondary-text);
+    border: 1px solid var(--component-button-secondary-bg);
+  }
+
+  .hero-cta--outline {
+    background: var(--component-button-outline-bg);
+    color: var(--component-button-outline-text);
+    border: 1px solid var(--component-button-outline-border);
+  }
+
+  .hero-social {
+    color: var(--color-muted);
+  }
+
+  .hero-countdown {
+    width: auto;
+    border-radius: var(--component-card-radius);
+    padding: calc(var(--component-badge-padding-y) + 0.1rem) calc(var(--component-badge-padding-x) - 0.1rem);
+    background: var(--component-hero-countdown-background);
+    border: 1px solid var(--component-hero-countdown-border);
+  }
+
+  .hero-countdown-label {
+    margin: 0;
+    font-size: 0.85em;
+    color: var(--color-muted);
+  }
+
+  .hero-countdown-value {
+    margin: 0.1rem 0 0;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .hero-scroll-indicator {
+    position: absolute;
+    left: 50%;
+    bottom: 1.2rem;
+    transform: translateX(-50%);
+    text-decoration: none;
+  }
+
+  .hero-scroll-arrow {
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    border-right: 2px solid var(--color-text);
+    border-bottom: 2px solid var(--color-text);
+    transform: rotate(45deg);
+    animation: hero-arrow-bounce calc(var(--motion-duration) * 4) infinite;
+  }
+
+  @keyframes hero-arrow-bounce {
+    0%,
+    100% {
+      transform: rotate(45deg) translate(0, 0);
+      opacity: 0.65;
+    }
+    50% {
+      transform: rotate(45deg) translate(0.3rem, 0.3rem);
+      opacity: 1;
+    }
+  }
+
+  .hero-overlay--dark {
+    background: var(--component-hero-overlay-dark);
+  }
+
+  .hero-overlay--light {
+    background: var(--component-hero-overlay-light);
+  }
+
+  .hero-overlay--gradient-bottom {
+    background: linear-gradient(
+      to top,
+      var(--component-hero-overlay-gradient-strong) 0%,
+      transparent 62%
+    );
+  }
+
+  .hero-overlay--gradient-top {
+    background: linear-gradient(
+      to bottom,
+      var(--component-hero-overlay-gradient-strong) 0%,
+      transparent 62%
+    );
+  }
+
+  .hero-overlay--none {
+    background: transparent;
+  }
+
+  .hero-transition {
+    color: var(--color-background);
+    pointer-events: none;
+  }
+
+  .hero-transition--fade {
+    height: clamp(40px, 9vw, 120px);
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      var(--component-hero-overlay-gradient-strong) 40%,
+      var(--color-background) 100%
+    );
+  }
+
+  .hero-transition--wave {
+    height: clamp(48px, 10vw, 140px);
+  }
+
+  .hero-transition-wave {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-transition--diagonal {
+    height: clamp(46px, 8vw, 110px);
+    background: var(--color-background);
+    clip-path: polygon(0 28%, 100% 0%, 100% 100%, 0 100%);
+  }
+
+  .hero-transition--curve {
+    height: clamp(48px, 9vw, 120px);
+    background: var(--color-background);
+    border-top-left-radius: 50% 100%;
+    border-top-right-radius: 50% 100%;
+  }
+</style>

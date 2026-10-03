@@ -1,0 +1,31 @@
+﻿{
+  "theme": {
+    "mode": "dark",
+    "background": "var(--color-background)",
+    "text": "var(--color-text)",
+    "accent": "var(--color-accent)"
+  },
+  "brand": {
+    "name": "Brand Nev",
+    "description": "Rovid leiras."
+  },
+  "contact": {
+    "address": "",
+    "email": "",
+    "phone": ""
+  },
+  "social": {},
+  "menu": [],
+  "legal": {
+    "privacyPath": "",
+    "termsPath": "",
+    "cookiePath": "",
+    "poweredBy": {
+      "enabled": false,
+      "label": "",
+      "url": "https://aimentool.com"
+    }
+  },
+  "poweredBy": false,
+  "systemStatus": false
+}

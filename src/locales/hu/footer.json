@@ -1,0 +1,35 @@
+{
+  "theme": {
+    "mode": "dark",
+    "background": "var(--color-background)",
+    "text": "var(--color-text)",
+    "accent": "var(--color-accent)"
+  },
+  "brand": {
+    "name": "Brand Neve",
+    "description": "Rovid bemutatkozo mondat."
+  },
+  "contact": {
+    "address": "Budapest, Pelda u. 1.",
+    "email": "info@example.com",
+    "phone": "+36 1 234 5678"
+  },
+  "social": {
+    "facebook": "",
+    "instagram": "",
+    "linkedin": ""
+  },
+  "menu": [],
+  "legal": {
+    "privacyPath": "",
+    "termsPath": "",
+    "cookiePath": "",
+    "poweredBy": {
+      "enabled": true,
+      "label": "Weboldal: Aimentool",
+      "url": "https://aimentool.com"
+    }
+  },
+  "poweredBy": true,
+  "systemStatus": false
+}
