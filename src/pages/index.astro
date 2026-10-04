@@ -70,7 +70,8 @@ const metrics = [
           <div class="hidden h-full w-[22.5%] overflow-hidden md:block">
             <video
               class="pointer-events-none h-full w-[150%] scale-[1.6] object-cover opacity-55 blur-[1px]"
-              src="/Hero.video.mp4"
+              data-video-src="/Hero.video.mp4"
+              preload="none"
               autoplay
               muted
               loop
@@ -82,7 +83,8 @@ const metrics = [
           <div class="relative h-full flex-1 overflow-hidden">
             <video
               class="absolute inset-0 h-full w-full object-cover"
-              src="/Hero.video.mp4"
+              data-video-src="/Hero.video.mp4"
+              preload="none"
               autoplay
               muted
               loop
@@ -94,7 +96,8 @@ const metrics = [
           <div class="hidden h-full w-[22.5%] overflow-hidden md:block">
             <video
               class="pointer-events-none h-full w-[150%] scale-[1.6] object-cover opacity-55 blur-[1px]"
-              src="/Hero.video.mp4"
+              data-video-src="/Hero.video.mp4"
+              preload="none"
               autoplay
               muted
               loop
@@ -408,6 +411,7 @@ const metrics = [
     let lastScrollY = window.scrollY;
 
     const applyHeaderState = () => {
+      const scrollY = window.scrollY;
       const isMobile = window.innerWidth < 768;
       const isOpen = !mobileMenu.classList.contains('hidden');
 
@@ -420,11 +424,11 @@ const metrics = [
       if (isOpen) {
         siteHeader.classList.remove('nav-hidden');
         siteHeader.classList.add('nav-visible');
-        lastScrollY = window.scrollY;
+        lastScrollY = scrollY;
         return;
       }
 
-      if (window.scrollY > lastScrollY && window.scrollY > 24) {
+      if (scrollY > lastScrollY && scrollY > 24) {
         siteHeader.classList.add('nav-hidden');
         siteHeader.classList.remove('nav-visible');
       } else {
@@ -432,7 +436,7 @@ const metrics = [
         siteHeader.classList.add('nav-visible');
       }
 
-      lastScrollY = window.scrollY;
+      lastScrollY = scrollY;
     };
 
     const lines = mobileMenuToggle.querySelectorAll('.mobile-menu-icon-line');
@@ -1087,6 +1091,24 @@ const metrics = [
         contactSubmitButton.textContent = 'Küldés';
       }
     });
+  }
+
+  const startHeroVideoLoading = () => {
+    window.setTimeout(() => {
+      document.querySelectorAll<HTMLVideoElement>('video[data-video-src]').forEach((video) => {
+        const source = video.dataset.videoSrc;
+        if (!source) return;
+
+        video.src = source;
+        video.load();
+      });
+    }, 1200);
+  };
+
+  if (document.readyState === 'complete') {
+    startHeroVideoLoading();
+  } else {
+    window.addEventListener('load', startHeroVideoLoading, { once: true });
   }
 
   renderProductCodes();
