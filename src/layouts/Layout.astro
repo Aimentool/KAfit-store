@@ -88,6 +88,14 @@ const serializedStructuredData = resolvedStructuredData ? JSON.stringify(resolve
     {serializedStructuredData && (
       <script is:inline type="application/ld+json" set:html={serializedStructuredData} />
     )}
+    <!-- Start cookieyes banner -->
+    <script
+      is:inline
+      id="cookieyes"
+      type="text/javascript"
+      src="https://cdn-cookieyes.com/client_data/57e29235b0550dfbba6b3138ad497299/script.js"
+    ></script>
+    <!-- End cookieyes banner -->
   </head>
   <body>
     <slot />
