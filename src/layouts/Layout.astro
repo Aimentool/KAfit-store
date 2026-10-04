@@ -67,6 +67,22 @@ const serializedStructuredData = resolvedStructuredData ? JSON.stringify(resolve
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preload" as="image" href="/kafit-store-logo.webp" fetchpriority="high" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Sora:wght@400;500;600;700;800&amp;display=swap" />
+    <link id="google-fonts-stylesheet" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Sora:wght@400;500;600;700;800&amp;display=swap" media="print" />
+    <script is:inline>
+      const googleFontsStylesheet = document.getElementById('google-fonts-stylesheet');
+      if (googleFontsStylesheet) {
+        const enableGoogleFonts = () => { googleFontsStylesheet.media = 'all'; };
+        if (googleFontsStylesheet.sheet) enableGoogleFonts();
+        else googleFontsStylesheet.addEventListener('load', enableGoogleFonts, { once: true });
+      }
+    </script>
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Sora:wght@400;500;600;700;800&amp;display=swap" />
+    </noscript>
     <meta name="description" content={metaDescription} />
     <meta name="robots" content={robotsContent} />
     <link rel="canonical" href={canonicalUrl} />
