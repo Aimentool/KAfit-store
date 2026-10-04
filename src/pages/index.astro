@@ -76,20 +76,21 @@ const metrics = [
               muted
               loop
               playsinline
-              poster="/kafit-store-logo.webp"
+              poster="/Hero.video-poster.webp"
             ></video>
           </div>
 
           <div class="relative h-full flex-1 overflow-hidden">
             <video
+              id="hero-main-video"
               class="absolute inset-0 h-full w-full object-cover"
-              data-video-src="/Hero.video.mp4"
-              preload="none"
+              src="/Hero.video.mp4"
+              preload="auto"
               autoplay
               muted
               loop
               playsinline
-              poster="/kafit-store-logo.webp"
+              poster="/Hero.video-poster.webp"
             ></video>
           </div>
 
@@ -102,7 +103,7 @@ const metrics = [
               muted
               loop
               playsinline
-              poster="/kafit-store-logo.webp"
+              poster="/Hero.video-poster.webp"
             ></video>
           </div>
         </div>
@@ -1093,22 +1094,27 @@ const metrics = [
     });
   }
 
-  const startHeroVideoLoading = () => {
-    window.setTimeout(() => {
-      document.querySelectorAll<HTMLVideoElement>('video[data-video-src]').forEach((video) => {
-        const source = video.dataset.videoSrc;
-        if (!source) return;
+  const mainHeroVideo = document.getElementById('hero-main-video') as HTMLVideoElement | null;
+  const loadDesktopHeroSideVideos = () => {
+    if (!mainHeroVideo || !window.matchMedia('(min-width: 768px)').matches) return;
 
-        video.src = source;
-        video.load();
-      });
-    }, 1200);
+    document.querySelectorAll<HTMLVideoElement>('video[data-video-src]').forEach((video) => {
+      const source = video.dataset.videoSrc;
+      if (!source || video.src) return;
+
+      video.src = source;
+      video.addEventListener('loadedmetadata', () => {
+        video.currentTime = mainHeroVideo.currentTime;
+        video.play().catch(() => {});
+      }, { once: true });
+      video.load();
+    });
   };
 
-  if (document.readyState === 'complete') {
-    startHeroVideoLoading();
-  } else {
-    window.addEventListener('load', startHeroVideoLoading, { once: true });
+  if (mainHeroVideo) {
+    mainHeroVideo.addEventListener('playing', loadDesktopHeroSideVideos, { once: true });
+    if (!mainHeroVideo.paused) loadDesktopHeroSideVideos();
+    window.addEventListener('resize', loadDesktopHeroSideVideos, { passive: true });
   }
 
   renderProductCodes();
