@@ -384,7 +384,7 @@ const metrics = [
             <button type="button" data-modal-open="returns" class="text-left transition hover:text-white">Elállási jog és visszaküldés</button>
             <button type="button" data-modal-open="privacy" class="text-left transition hover:text-white">Adatkezelési tájékoztató</button>
             <button type="button" data-modal-open="size-guide" class="text-left transition hover:text-white">Mérettáblázat</button>
-            <button type="button" data-modal-open="terms" class="text-left transition hover:text-white">ÁFSZ</button>
+            <button type="button" data-modal-open="terms" class="text-left transition hover:text-white">ÁSZF</button>
           </div>
         </div>
       </div>
@@ -857,22 +857,79 @@ const metrics = [
 
   const modalMap = {
     terms: {
-      title: 'ÁFSZ',
+      title: 'ÁSZF',
       content: `
-        <div class="legal-intro">
-          <p><strong>Több, mint egy webshop. Ez a mi történetünk.</strong></p>
+        <div class="legal-block">
+          <h4>Szolgáltató adatai</h4>
+          <p>Tulajdonos: Köves Kristóf<br />Székhely: 3347 Balaton, Kossuth Lajos út 86.<br />Adószám: 59850247-1-30<br />Nyilvántartási szám: 57895558</p>
+          <p>A szolgáltató elérhetősége és az igénybe vevőkkel való kapcsolattartásra rendszeresen használt elektronikus levelezési címe:<br />E-mail: koveskristof510@gmail.com<br />Telefonszám: +36 30/4316998</p>
+          <p>A szerződés nyelve: magyar.</p>
         </div>
         <div class="legal-block">
-          <h4>1. A szolgáltatás célja</h4>
-          <p>A KAfit-Store ruházati és kiegészítő termékek értékesítésére kínál online kereskedelmi lehetőséget. A webshop célja, hogy a vásárlók egyszerű, biztonságos és átlátható módon tudjanak rendelést leadni.</p>
+          <h4>1.1. Alapvető rendelkezések</h4>
+          <p>A jelen Szabályzatban nem szabályozott kérdésekre, valamint a jelen Szabályzat értelmezésére a magyar jog az irányadó, különös tekintettel a Polgári Törvénykönyvről szóló 2013. évi V. törvényre („Ptk.”) és az elektronikus kereskedelmi szolgáltatások, valamint az információs társadalommal összefüggő szolgáltatások egyes kérdéseiről szóló 2001. évi CVIII. törvényre. A vonatkozó jogszabályok kötelező rendelkezései külön kikötés nélkül is irányadók a felekre.</p>
         </div>
         <div class="legal-block">
-          <h4>2. Megrendelés</h4>
-          <p>A rendelés leadása előtt a Vásárlónak a termékadatok, méretinformációk és a megrendelés feltételei alapján kell döntést hoznia. A rendelés elküldése azt jelenti, hogy a Vásárló tudomásul vette a feltételeket és a kiválasztott méretezésre vonatkozó adatokat.</p>
+          <h4>1.2. Hatály és az ÁSZF módosítása</h4>
         </div>
         <div class="legal-block">
-          <h4>3. Fizetés és szállítás</h4>
-          <p>A megrendelés végösszegét a rendelés leadásakor kell teljesíteni a rendelkezésre álló fizetési módok szerint. A szállítási költség és a kiszállítási határidő a rendelés összefoglalójában jelenik meg.</p>
+          <h4>1.3. Szerzői jog</h4>
+          <p>A webshop mint szerzői jogi mű szerzői jogvédelem alatt áll.</p>
+        </div>
+        <div class="legal-block">
+          <h4>1.4. Rendelkezésre állás és adatkezelési szabályok</h4>
+        </div>
+        <div class="legal-block">
+          <h4>1.5. Adatvédelmi tájékoztató</h4>
+          <p>Az adatvédelmi tájékoztató az „Adatkezelési tájékoztató” fülön érhető el.</p>
+        </div>
+        <div class="legal-block">
+          <h4>1.6. Termékárak és szállítás</h4>
+          <p>A megvásárolt termékeket GLS-sel vagy Foxposttal juttatjuk el a vásárlókhoz. A termékek ára tárgyi adómentes, magyar forintban értendő, és nem tartalmazza a házhozszállítás díját. A termékek készleten vannak; a csomag feladása a vásárlást követő 24 órán belül megtörténik. A felhasználó a megrendelés végén választhatja ki az átvétel módját.</p>
+          <p>A szállítási díjat minden esetben a megrendelő viseli. Ha a kézbesítés a megrendelő hibájából hiúsul meg – például hibás cím megadása, a kézbesítéskor való távollét vagy a vételár kifizetésének elmaradása miatt –, a megrendelő köteles megtéríteni az ismételt kiszállítás díját.</p>
+          <p>A szállítmány érkezésekor kérjük, győződjön meg a csomag sértetlenségéről. Reklamációt kárjegyzőkönyv alapján tudunk kezelni.</p>
+        </div>
+        <div class="legal-block">
+          <h4>1.7. Termékinformációk</h4>
+          <p>A szolgáltató az online felületen részletesen feltünteti a termék nevét és leírását, valamint fényképeket jelenít meg róla. A képeken szereplő termékek megfelelnek a valóságnak.</p>
+        </div>
+        <div class="legal-block">
+          <h4>1.8. Akciós árak</h4>
+          <p>Akciós ár bevezetése esetén a szolgáltató teljes körűen tájékoztatja a felhasználókat az akció időtartamáról.</p>
+        </div>
+        <div class="legal-block">
+          <h4>1.9. A rendelés menete</h4>
+          <p>A vásárló a „Vásárlás” fülön megadja a megrendelni kívánt termékek kódját vagy kódjait, majd elfogadja az ÁSZF-et, és igazolja, hogy megismerte az adatkezelési tájékoztatót, valamint a mérettáblázatot. Kiválasztja a fizetési módot – előre utalást vagy a kiszállítást teljesítő cég futáránál történő utánvétet –, továbbá megadja a szükséges adatokat: nevét, telefonszámát, e-mail-címét és szállítási címét.</p>
+        </div>
+        <div class="legal-block">
+          <h4>1.10. Adatbeviteli hibák javítása</h4>
+          <p>Az adatbeviteli hibák – például a termék hozzáadása vagy törlése, illetve az ár ellenőrzése – e-mailben vagy telefonon jelezhetők.</p>
+        </div>
+        <div class="legal-block">
+          <h4>A megrendelések feldolgozása és teljesítése</h4>
+          <h4>1.13. A megrendelések feldolgozása</h4>
+          <p>A megrendelések feldolgozása automatikusan megkezdődik.</p>
+          <h4>1.14. Általános teljesítési határidő</h4>
+          <p>A megrendelés feladása a megrendeléstől számított 1 munkanapon belül megtörténik.</p>
+          <h4>1.15. Készlethiány</h4>
+          <p>Ha a szolgáltató azért nem tudja teljesíteni a szerződésben vállalt kötelezettségét, mert a meghatározott termék nem áll rendelkezésre, köteles erről a vásárlót haladéktalanul tájékoztatni, és a vásárló által fizetett összeget haladéktalanul, de legkésőbb harminc napon belül visszatéríteni. E kötelezettség teljesítése nem mentesíti az eladót a szerződésszegés egyéb következményei alól.</p>
+        </div>
+        <div class="legal-block">
+          <h4>1.16. Elállás és visszaküldés</h4>
+          <p>Az elállással és a visszaküldéssel kapcsolatos információk az „Elállási jog és visszaküldés” fülön találhatók.</p>
+        </div>
+        <div class="legal-block">
+          <h4>1.17. Panaszkezelés</h4>
+          <p>Panasz e-mailben vagy telefonon intézhető.</p>
+        </div>
+        <div class="legal-block">
+          <h4>1.18. Vegyes rendelkezések</h4>
+          <p>A szolgáltató és a felhasználó vitás ügyeiket békés úton próbálják rendezni.</p>
+        </div>
+        <div class="legal-block">
+          <h4>1.20. Át nem vett termékek</h4>
+          <p>Amennyiben a megrendelő az általa megrendelt terméket – különösen utánvétes rendelés esetén – nem veszi át, és a rendelés teljesítése, kiszállítása, illetve visszaszállítása a szolgáltató számára igazolt költséget eredményez, a szolgáltató jogosult az irányadó jogszabályok által megengedett és ténylegesen felmerült költségeinek megtérítését követelni.</p>
+          <p>Amennyiben a megrendelő a jogszerűen fennálló és esedékes fizetési kötelezettségét felszólítás ellenére sem teljesíti, a szolgáltató jogosult a követelés érvényesítésével harmadik személyt, így különösen követeléskezelőt, jogi képviselőt vagy egyéb, erre jogosult szolgáltatót megbízni.</p>
         </div>
       `
     },
