@@ -64,13 +64,54 @@ const metrics = [
   </header>
 
   <main>
-    <section class="relative mx-auto flex min-h-[100vh] w-full max-w-[1500px] items-start justify-center px-4 pb-10 pt-16 md:px-8 md:pb-14 md:pt-20 lg:px-12">
-      <div class="flex w-full flex-col items-center justify-start">
-        <div class="flex w-full justify-center">
-          <img src="/KA fit STORE logó.png" alt="KAfit Store" class="mx-auto w-full max-w-[920px] object-contain md:max-w-[1180px]" />
+    <section class="relative isolate mx-auto flex min-h-[100vh] w-full max-w-[1500px] items-center justify-center overflow-hidden px-4 pb-10 pt-16 md:px-8 md:pb-14 md:pt-20 lg:px-12">
+      <div class="absolute inset-0 -z-10 overflow-hidden bg-black">
+        <div class="absolute inset-0 flex items-stretch">
+          <div class="hidden h-full w-[22.5%] overflow-hidden md:block">
+            <video
+              class="pointer-events-none h-full w-[150%] scale-[1.6] object-cover opacity-55 blur-[1px]"
+              src="/Hero.video.mp4"
+              autoplay
+              muted
+              loop
+              playsinline
+              poster="/KA fit STORE logó.png"
+            ></video>
+          </div>
+
+          <div class="relative h-full flex-1 overflow-hidden">
+            <video
+              class="absolute inset-0 h-full w-full object-cover"
+              src="/Hero.video.mp4"
+              autoplay
+              muted
+              loop
+              playsinline
+              poster="/KA fit STORE logó.png"
+            ></video>
+          </div>
+
+          <div class="hidden h-full w-[22.5%] overflow-hidden md:block">
+            <video
+              class="pointer-events-none h-full w-[150%] scale-[1.6] object-cover opacity-55 blur-[1px]"
+              src="/Hero.video.mp4"
+              autoplay
+              muted
+              loop
+              playsinline
+              poster="/KA fit STORE logó.png"
+            ></video>
+          </div>
         </div>
 
-        <div class="mt-8 flex flex-col items-center justify-center md:mt-12">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.12),_rgba(0,0,0,0.12)_35%,_rgba(0,0,0,0.72)_100%)]"></div>
+        <div class="absolute inset-0 bg-black/45"></div>
+      </div>
+
+      <div class="hero-logo-wrap relative z-10 flex w-full flex-col items-center justify-center text-center">
+        <img src="/KA fit STORE logó.png" alt="KAfit Store" class="hero-logo-mobile hero-logo-desktop mx-auto w-full max-w-[920px] object-contain drop-shadow-[0_18px_26px_rgba(255,121,35,0.18)] md:max-w-[1180px]" />
+
+        <div class="mt-8 flex flex-col items-center justify-center md:mt-12 mobile-cta-lift">
           <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Termékek megtekintése az Instagramon" class="instagram-soft-glow inline-flex items-center gap-3 text-white transition duration-300 hover:scale-[1.02]">
             <span class="text-center text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-orange-200/80 md:text-[0.74rem]">
               Termékek megtekintése az Instagramon
@@ -115,22 +156,23 @@ const metrics = [
           <h2 class="mt-3 text-3xl font-bold text-white md:text-5xl">Küldd el a rendelésed</h2>
         </div>
 
-        <form id="checkout-form" novalidate class="rounded-[1.75rem] border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/30 md:p-8">
+        <form id="checkout-form" action="https://formspree.io/f/xqparrra" method="POST" novalidate class="rounded-[1.75rem] border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/30 md:p-8">
+          <input type="hidden" name="_subject" value="Új rendelés - KAfit Store" />
           <div id="checkout-base-step" class="space-y-6">
             <div class="grid gap-4 md:grid-cols-2">
               <label class="block text-sm font-medium text-slate-200">
                 <span class="mb-2 block">Név</span>
-                <input id="customer-name" type="text" required placeholder="Név" class="base-required w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
+                <input id="customer-name" name="customer_name" type="text" required placeholder="Név" class="base-required w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
               </label>
 
               <label class="block text-sm font-medium text-slate-200">
                 <span class="mb-2 block">Telefonszám</span>
-                <input id="customer-phone" type="tel" required inputmode="tel" pattern="[+0-9()\\s-]{7,}" placeholder="+36 20 123 4567" class="base-required w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
+                <input id="customer-phone" name="customer_phone" type="tel" required inputmode="tel" pattern="[+0-9()\\s-]{7,}" placeholder="+36 20 123 4567" class="base-required w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
               </label>
 
               <label class="block text-sm font-medium text-slate-200 md:col-span-2">
                 <span class="mb-2 block">E-mail</span>
-                <input id="customer-email" type="email" required placeholder="email@pelda.hu" class="base-required w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
+                <input id="customer-email" name="email" type="email" required placeholder="email@pelda.hu" class="base-required w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
               </label>
             </div>
 
@@ -143,17 +185,17 @@ const metrics = [
               <div class="grid gap-4 md:grid-cols-2">
                 <label class="block text-sm font-medium text-slate-200">
                   <span class="mb-2 block">Város</span>
-                  <input id="shipping-city" type="text" required placeholder="Budapest" class="base-required w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
+                  <input id="shipping-city" name="shipping_city" type="text" required placeholder="Budapest" class="base-required w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
                 </label>
 
                 <label class="block text-sm font-medium text-slate-200">
                   <span class="mb-2 block">Irányítószám</span>
-                  <input id="shipping-zip" type="text" required inputmode="numeric" pattern="[0-9]{4,5}" placeholder="1037" class="base-required w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
+                  <input id="shipping-zip" name="shipping_postal_code" type="text" required inputmode="numeric" pattern="[0-9]{4,5}" placeholder="1037" class="base-required w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
                 </label>
 
                 <label class="block text-sm font-medium text-slate-200 md:col-span-2">
                   <span class="mb-2 block">Utca, házszám</span>
-                  <input id="shipping-address" type="text" required placeholder="Bécsi út 12." class="base-required w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
+                  <input id="shipping-address" name="shipping_address" type="text" required placeholder="Bécsi út 12." class="base-required w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
                 </label>
               </div>
             </div>
@@ -188,17 +230,17 @@ const metrics = [
               <div class="grid gap-4 md:grid-cols-2">
                 <label class="block text-sm font-medium text-slate-200">
                   <span class="mb-2 block">Város</span>
-                  <input id="billing-city" type="text" placeholder="Székesfehérvár" class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
+                  <input id="billing-city" name="billing_city" type="text" placeholder="Székesfehérvár" class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
                 </label>
 
                 <label class="block text-sm font-medium text-slate-200">
                   <span class="mb-2 block">Irányítószám</span>
-                  <input id="billing-zip" type="text" inputmode="numeric" pattern="[0-9]{4,5}" placeholder="8000" class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
+                  <input id="billing-zip" name="billing_postal_code" type="text" inputmode="numeric" pattern="[0-9]{4,5}" placeholder="8000" class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
                 </label>
 
                 <label class="block text-sm font-medium text-slate-200 md:col-span-2">
                   <span class="mb-2 block">Utca, házszám</span>
-                  <input id="billing-address-line" type="text" placeholder="Fő utca 25." class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
+                  <input id="billing-address-line" name="billing_address" type="text" placeholder="Fő utca 25." class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
                 </label>
               </div>
             </div>
@@ -240,7 +282,7 @@ const metrics = [
             </div>
 
             <label class="flex items-start gap-3 rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-slate-300">
-              <input id="order-confirmation" type="checkbox" required class="mt-1 h-4 w-4 rounded border-white/20 bg-slate-900 text-orange-500 focus:ring-orange-400" />
+              <input id="order-confirmation" name="order_confirmation" value="yes" type="checkbox" required class="mt-1 h-4 w-4 rounded border-white/20 bg-slate-900 text-orange-500 focus:ring-orange-400" />
               <span>Elolvastam és elfogadom, hogy az adatok helyesek, és a megrendelést továbbítani tudom.</span>
             </label>
 
@@ -260,6 +302,7 @@ const metrics = [
               </button>
             </div>
           </div>
+          <p id="checkout-form-status" class="mt-4 min-h-5 text-sm text-slate-300" role="status" aria-live="polite"></p>
         </form>
       </div>
     </section>
@@ -268,19 +311,33 @@ const metrics = [
       <div class="mx-auto max-w-4xl px-6 py-20">
         <h2 class="text-center text-3xl font-bold text-white md:text-5xl">Elakadtál? Probléma akadt a rendeléseddel?</h2>
 
-        <form class="mt-10 rounded-[1.75rem] border border-white/10 bg-white/5 p-6 shadow-xl shadow-slate-950/30 md:p-8">
+        <form id="contact-form" action="https://formspree.io/f/myezrrqe" method="POST" class="mt-10 rounded-[1.75rem] border border-white/10 bg-white/5 p-6 shadow-xl shadow-slate-950/30 md:p-8">
+          <input type="hidden" name="_subject" value="Kapcsolatfelvétel - KAfit Store" />
+
+          <label class="mb-5 block text-sm text-slate-300">
+            Név
+            <input type="text" name="name" autocomplete="name" required class="mt-2 w-full rounded-xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
+          </label>
+
+          <label class="mb-5 block text-sm text-slate-300">
+            E-mail-cím
+            <input type="email" name="email" autocomplete="email" required class="mt-2 w-full rounded-xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
+          </label>
+
           <label class="block text-sm text-slate-300">
-            <textarea rows="6" placeholder="Írd le, miben segíthetünk..." class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none"></textarea>
+            Üzenet
+            <textarea name="message" rows="6" required placeholder="Írd le, miben segíthetünk..." class="mt-2 w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none"></textarea>
           </label>
 
           <label class="mt-5 flex items-start gap-3 text-sm text-slate-300">
-            <input type="checkbox" class="mt-1 h-4 w-4 rounded border-white/20 bg-slate-900 text-orange-500 focus:ring-orange-400" />
-            <span>Elolvastam és elfogadom, hogy az üzenet elküldése előtt ellenőriztem a megadott információt.</span>
+            <input type="checkbox" name="details-confirmed" value="yes" required class="mt-1 h-4 w-4 rounded border-white/20 bg-slate-900 text-orange-500 focus:ring-orange-400" />
+            <span>Ellenőriztem, hogy az elérhetőségeim és az üzenetem helyesek.</span>
           </label>
 
-          <button type="submit" disabled class="mt-6 w-full rounded-full bg-orange-500 px-5 py-3 text-sm font-semibold text-white opacity-50 transition hover:bg-orange-400 disabled:cursor-not-allowed disabled:hover:bg-orange-500">
+          <button type="submit" class="mt-6 w-full rounded-full bg-orange-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-orange-400 disabled:cursor-not-allowed disabled:opacity-50">
             Küldés
           </button>
+          <p id="contact-form-status" class="mt-4 min-h-5 text-sm text-slate-300" role="status" aria-live="polite"></p>
         </form>
       </div>
     </section>
@@ -411,7 +468,7 @@ const metrics = [
     applyHeaderState();
   }
 
-  const billingToggle = document.getElementById('billing-toggle');
+  const billingToggle = document.getElementById('billing-toggle') as HTMLInputElement | null;
   const billingAddress = document.getElementById('billing-address');
 
   const setFieldState = (field, isValid, message = 'Kötelező és helyes adat szükséges') => {
@@ -444,7 +501,7 @@ const metrics = [
     syncBillingState();
   }
 
-  const checkoutForm = document.getElementById('checkout-form');
+  const checkoutForm = document.getElementById('checkout-form') as HTMLFormElement | null;
   const checkoutBaseStep = document.getElementById('checkout-base-step');
   const checkoutSummaryStep = document.getElementById('checkout-summary-step');
   const toSummaryButton = document.getElementById('to-summary-button');
@@ -453,9 +510,9 @@ const metrics = [
   const productCodeList = document.getElementById('product-code-list');
   const summaryBaseData = document.getElementById('summary-base-data');
   const summaryProductList = document.getElementById('summary-product-list');
-  const orderConfirmation = document.getElementById('order-confirmation');
+  const orderConfirmation = document.getElementById('order-confirmation') as HTMLInputElement | null;
 
-  const productCodes = [];
+  const productCodes: { id: string; code: string }[] = [];
   const PRODUCT_CODE_PATTERN = /^[A-Z0-9-]{3,20}$/;
 
   const validateProductCodeInput = (field) => {
@@ -943,7 +1000,10 @@ const metrics = [
   });
 
   if (checkoutForm) {
-    checkoutForm.addEventListener('submit', (event) => {
+    const checkoutFormStatus = document.getElementById('checkout-form-status') as HTMLParagraphElement | null;
+    const checkoutSubmitButton = checkoutForm.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+
+    checkoutForm.addEventListener('submit', async (event) => {
       event.preventDefault();
 
       if (!validateBaseStep()) return;
@@ -954,7 +1014,78 @@ const metrics = [
       }
 
       orderConfirmation.setCustomValidity('');
-      window.alert('A rendelés elküldése sikeresen rögzítve.');
+      if (!checkoutSubmitButton || !checkoutFormStatus) return;
+
+      checkoutSubmitButton.disabled = true;
+      checkoutSubmitButton.textContent = 'Küldés...';
+      checkoutFormStatus.textContent = '';
+
+      const formData = new FormData(checkoutForm);
+      formData.set('product_codes', productCodes.map((item) => item.code).join(', '));
+      formData.set('payment_method', formData.get('paymentMethod') === 'bank' ? 'Előre utalás' : 'Utánvét');
+      formData.delete('paymentMethod');
+
+      if (!billingToggle?.checked) {
+        ['billing_city', 'billing_postal_code', 'billing_address'].forEach((field) => formData.delete(field));
+      }
+
+      let orderSubmitted = false;
+
+      try {
+        const response = await fetch(checkoutForm.action, {
+          method: 'POST',
+          body: formData,
+          headers: { Accept: 'application/json' },
+        });
+
+        if (!response.ok) {
+          throw new Error('Order submission failed');
+        }
+
+        orderSubmitted = true;
+        checkoutFormStatus.textContent = 'Köszönjük, a rendelésedet elküldtük.';
+      } catch {
+        checkoutFormStatus.textContent = 'A rendelés küldése nem sikerült. Kérjük, próbáld újra.';
+      } finally {
+        checkoutSubmitButton.disabled = orderSubmitted;
+        checkoutSubmitButton.textContent = orderSubmitted ? 'Rendelés elküldve' : 'Megrendelés elküldése';
+      }
+    });
+  }
+
+  const contactForm = document.getElementById('contact-form') as HTMLFormElement | null;
+  const contactFormStatus = document.getElementById('contact-form-status') as HTMLParagraphElement | null;
+
+  if (contactForm && contactFormStatus) {
+    const contactSubmitButton = contactForm.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+
+    contactForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!contactSubmitButton) return;
+
+      contactSubmitButton.disabled = true;
+      contactSubmitButton.textContent = 'Küldés...';
+      contactFormStatus.textContent = '';
+
+      try {
+        const response = await fetch(contactForm.action, {
+          method: 'POST',
+          body: new FormData(contactForm),
+          headers: { Accept: 'application/json' },
+        });
+
+        if (!response.ok) {
+          throw new Error('Form submission failed');
+        }
+
+        contactForm.reset();
+        contactFormStatus.textContent = 'Köszönjük, az üzenetedet elküldtük.';
+      } catch {
+        contactFormStatus.textContent = 'Az üzenet küldése nem sikerült. Kérjük, próbáld újra.';
+      } finally {
+        contactSubmitButton.disabled = false;
+        contactSubmitButton.textContent = 'Küldés';
+      }
     });
   }
 

@@ -66,6 +66,38 @@
   filter: drop-shadow(0 18px 26px rgba(255, 121, 35, 0.14));
 }
 
+.hero-logo-wrap {
+  transform: translateY(0);
+}
+
+.hero-logo-wrap {
+  margin-top: 0;
+}
+
+.mobile-cta-lift {
+  margin-top: 8rem;
+}
+
+@media (max-width: 767px) {
+  .hero-logo-wrap {
+    margin-top: -50vh;
+  }
+
+  .mobile-cta-lift {
+    margin-top: 10rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-logo-wrap {
+    margin-top: -36vh;
+  }
+
+  .mobile-cta-lift {
+    margin-top: 3rem;
+  }
+}
+
 .nav-visible {
   transform: translateY(0);
 }
