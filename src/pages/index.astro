@@ -180,26 +180,26 @@ const metrics = [
               </label>
             </div>
 
-            <div class="rounded-2xl border border-white/10 bg-slate-950/70 p-4">
+            <div id="billing-address" class="rounded-2xl border border-white/10 bg-slate-950/70 p-4">
               <div class="mb-3 flex items-center justify-between">
-                <h3 class="text-xl font-semibold text-white">Szállítási cím</h3>
+                <h3 class="text-xl font-semibold text-white">Számlázási cím</h3>
                 <span class="text-[10px] uppercase tracking-[0.2em] text-slate-400">Kötelező</span>
               </div>
 
               <div class="grid gap-4 md:grid-cols-2">
                 <label class="block text-sm font-medium text-slate-200">
                   <span class="mb-2 block">Város</span>
-                  <input id="shipping-city" name="shipping_city" type="text" required placeholder="Budapest" class="base-required w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
+                  <input id="billing-city" name="billing_city" type="text" required placeholder="Budapest" class="base-required w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
                 </label>
 
                 <label class="block text-sm font-medium text-slate-200">
                   <span class="mb-2 block">Irányítószám</span>
-                  <input id="shipping-zip" name="shipping_postal_code" type="text" required inputmode="numeric" pattern="[0-9]{4,5}" placeholder="1037" class="base-required w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
+                  <input id="billing-zip" name="billing_postal_code" type="text" required inputmode="numeric" pattern="[0-9]{4,5}" placeholder="1037" class="base-required w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
                 </label>
 
                 <label class="block text-sm font-medium text-slate-200 md:col-span-2">
                   <span class="mb-2 block">Utca, házszám</span>
-                  <input id="shipping-address" name="shipping_address" type="text" required placeholder="Bécsi út 12." class="base-required w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
+                  <input id="billing-address-line" name="billing_address" type="text" required placeholder="Bécsi út 12." class="base-required w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
                 </label>
               </div>
             </div>
@@ -213,38 +213,100 @@ const metrics = [
               <div id="product-code-list" class="space-y-3"></div>
 
               <div class="mt-4 flex flex-col gap-3 md:flex-row">
-                <input id="product-code-input" type="text" autocomplete="off" pattern="[A-Z0-9-]{3,20}" placeholder="Pl.: KAFIT-204" class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
+                <input id="product-code-input" type="text" autocomplete="off" pattern="[A-Z0-9-]{3,20}" placeholder="Pl.: C26110201" class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
                 <button type="button" id="add-product-code" class="rounded-full bg-orange-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-orange-400">
                   Kód bevitele
                 </button>
               </div>
             </div>
 
-            <label class="flex items-center gap-3 rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-slate-300">
-              <input id="billing-toggle" type="checkbox" class="h-4 w-4 rounded border-white/20 bg-slate-900 text-orange-500 focus:ring-orange-400" />
-              <span>A számlázási cím eltér a szállítási címtől.</span>
-            </label>
+            <fieldset class="rounded-2xl border border-white/10 bg-slate-950/70 p-4">
+              <legend class="px-1 text-xl font-semibold text-white">Szállítás módja</legend>
+              <div class="grid gap-3 md:grid-cols-3">
+                <label class="flex cursor-pointer items-start justify-between gap-3 rounded-2xl border border-white/10 bg-slate-900/90 p-4 text-sm text-white">
+                  <span>
+                    <span class="block font-semibold">Házhozszállítás – GLS</span>
+                    <span class="mt-1 block text-slate-400">2 240 Ft</span>
+                  </span>
+                  <input type="radio" name="deliveryMethod" value="gls-home" checked required class="mt-1 h-4 w-4 accent-orange-500" />
+                </label>
 
-            <div id="billing-address" class="hidden rounded-2xl border border-white/10 bg-slate-950/70 p-4">
-              <div class="mb-3 flex items-center justify-between">
-                <h3 class="text-xl font-semibold text-white">Számlázási cím</h3>
-                <span class="text-[10px] uppercase tracking-[0.2em] text-slate-400">Opcionális</span>
+                <label class="flex cursor-pointer items-start justify-between gap-3 rounded-2xl border border-white/10 bg-slate-900/90 p-4 text-sm text-white">
+                  <span>
+                    <span class="block font-semibold">Csomagautomata – GLS</span>
+                    <span class="mt-1 block text-slate-400">1 590 Ft</span>
+                  </span>
+                  <input type="radio" name="deliveryMethod" value="gls-locker" required class="mt-1 h-4 w-4 accent-orange-500" />
+                </label>
+
+                <label class="flex cursor-pointer items-start justify-between gap-3 rounded-2xl border border-white/10 bg-slate-900/90 p-4 text-sm text-white">
+                  <span>
+                    <span class="block font-semibold">Csomagautomata – Foxpost</span>
+                    <span class="mt-1 block text-slate-400">1 699–3 699 Ft, csomagmérettől függően</span>
+                  </span>
+                  <input type="radio" name="deliveryMethod" value="foxpost-locker" required class="mt-1 h-4 w-4 accent-orange-500" />
+                </label>
               </div>
+            </fieldset>
 
+            <fieldset id="shipping-address-choice" class="hidden rounded-2xl border border-white/10 bg-slate-950/70 p-4">
+              <legend class="px-1 text-lg font-semibold text-white">A szállítási cím eltér a számlázási címtől?</legend>
+              <div class="mt-2 grid gap-3 sm:grid-cols-2">
+                <label class="flex cursor-pointer items-center justify-between rounded-2xl border border-white/10 bg-slate-900/90 px-4 py-3 text-sm text-white">
+                  <span>Nem, a cím megegyezik</span>
+                  <input type="radio" name="shippingAddressDiffers" value="no" required class="h-4 w-4 accent-orange-500" />
+                </label>
+                <label class="flex cursor-pointer items-center justify-between rounded-2xl border border-white/10 bg-slate-900/90 px-4 py-3 text-sm text-white">
+                  <span>Igen, másik címre kérem</span>
+                  <input type="radio" name="shippingAddressDiffers" value="yes" required class="h-4 w-4 accent-orange-500" />
+                </label>
+              </div>
+            </fieldset>
+
+            <div id="shipping-address-fields" class="hidden rounded-2xl border border-white/10 bg-slate-950/70 p-4">
+              <div class="mb-3 flex items-center justify-between">
+                <h3 class="text-xl font-semibold text-white">Szállítási cím</h3>
+                <span class="text-[10px] uppercase tracking-[0.2em] text-slate-400">Kötelező</span>
+              </div>
               <div class="grid gap-4 md:grid-cols-2">
                 <label class="block text-sm font-medium text-slate-200">
                   <span class="mb-2 block">Város</span>
-                  <input id="billing-city" name="billing_city" type="text" placeholder="Székesfehérvár" class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
+                  <input id="shipping-city" name="shipping_city" type="text" disabled placeholder="Budapest" class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
                 </label>
 
                 <label class="block text-sm font-medium text-slate-200">
                   <span class="mb-2 block">Irányítószám</span>
-                  <input id="billing-zip" name="billing_postal_code" type="text" inputmode="numeric" pattern="[0-9]{4,5}" placeholder="8000" class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
+                  <input id="shipping-zip" name="shipping_postal_code" type="text" disabled inputmode="numeric" pattern="[0-9]{4,5}" placeholder="1037" class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
                 </label>
 
                 <label class="block text-sm font-medium text-slate-200 md:col-span-2">
                   <span class="mb-2 block">Utca, házszám</span>
-                  <input id="billing-address-line" name="billing_address" type="text" placeholder="Fő utca 25." class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
+                  <input id="shipping-address" name="shipping_address" type="text" disabled placeholder="Bécsi út 12." class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
+                </label>
+              </div>
+            </div>
+
+            <div id="locker-location-fields" class="hidden rounded-2xl border border-white/10 bg-slate-950/70 p-4">
+              <h3 class="mb-3 text-xl font-semibold text-white">Csomagautomata címe</h3>
+              <div class="grid gap-4 md:grid-cols-2">
+                <label class="block text-sm font-medium text-slate-200 md:col-span-2">
+                  <span class="mb-2 block">Automata neve vagy azonosítója</span>
+                  <input id="locker-name" name="locker_name" type="text" disabled placeholder="Pl.: GLS automata – Fő téri üzlet" class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
+                </label>
+
+                <label class="block text-sm font-medium text-slate-200">
+                  <span class="mb-2 block">Település</span>
+                  <input id="locker-city" name="locker_city" type="text" disabled placeholder="Budapest" class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
+                </label>
+
+                <label class="block text-sm font-medium text-slate-200">
+                  <span class="mb-2 block">Irányítószám</span>
+                  <input id="locker-zip" name="locker_postal_code" type="text" disabled inputmode="numeric" pattern="[0-9]{4,5}" placeholder="1037" class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
+                </label>
+
+                <label class="block text-sm font-medium text-slate-200 md:col-span-2">
+                  <span class="mb-2 block">Utca, házszám vagy pontos cím</span>
+                  <input id="locker-address" name="locker_address" type="text" disabled placeholder="Bécsi út 12." class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-500 focus:border-orange-400 focus:outline-none" />
                 </label>
               </div>
             </div>
@@ -270,29 +332,43 @@ const metrics = [
             </div>
 
             <div class="rounded-[1.5rem] border border-white/10 bg-slate-950/70 p-6">
-              <h3 class="text-xl font-semibold text-white">Fizetési mód</h3>
+              <h3 class="text-xl font-semibold text-white">Szállítás és fizetés</h3>
 
               <div class="mt-4 grid gap-3 md:grid-cols-2">
                 <label class="flex cursor-pointer items-center justify-between rounded-2xl border border-white/10 bg-slate-900/90 px-4 py-3 text-sm font-medium text-white">
-                  <span>Utánvét</span>
+                  <span>Utánvét <span class="text-orange-300">(+300 Ft)</span></span>
                   <input type="radio" name="paymentMethod" value="afterpay" checked class="h-4 w-4 accent-orange-500" />
                 </label>
 
                 <label class="flex cursor-pointer items-center justify-between rounded-2xl border border-white/10 bg-slate-900/90 px-4 py-3 text-sm font-medium text-white">
-                  <span>Előre utalás</span>
+                  <span>Fizetés utalással <span class="text-emerald-300">(díjmentes)</span></span>
                   <input type="radio" name="paymentMethod" value="bank" class="h-4 w-4 accent-orange-500" />
                 </label>
               </div>
+
+              <p class="mt-3 text-sm text-slate-400">Utalás esetén a fizetési adatokat a visszaigazoló e-mailben küldjük el.</p>
+              <div id="summary-delivery-data" class="mt-6 space-y-3 text-sm text-slate-300"></div>
+              <div id="summary-cost-data" class="mt-6 rounded-2xl border border-white/10 bg-slate-950/70 p-4 text-sm text-slate-300"></div>
+              <p class="mt-3 text-xs leading-5 text-slate-400">Az összesítő tartalmazza a szállítási és fizetési díjakat. A termékek árát a megadott kódok alapján e-mailben egyeztetjük.</p>
+            </div>
+
+            <label class="flex items-start gap-3 rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-slate-300">
+              <input id="terms-acceptance" name="terms_accepted" value="yes" type="checkbox" required class="mt-1 h-4 w-4 rounded border-white/20 bg-slate-900 text-orange-500 focus:ring-orange-400" />
+              <span>Elolvastam és elfogadom az ÁSZF-et.</span>
+            </label>
+
+            <div class="flex flex-wrap gap-3 text-sm text-slate-300">
+              <button type="button" data-modal-open="terms" class="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-left transition hover:bg-white/10">ÁSZF megtekintése</button>
+              <button type="button" data-modal-open="privacy" class="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-left transition hover:bg-white/10">Adatkezelési tájékoztató</button>
             </div>
 
             <label class="flex items-start gap-3 rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-slate-300">
               <input id="order-confirmation" name="order_confirmation" value="yes" type="checkbox" required class="mt-1 h-4 w-4 rounded border-white/20 bg-slate-900 text-orange-500 focus:ring-orange-400" />
-              <span>Elolvastam és elfogadom, hogy az adatok helyesek, és a megrendelést továbbítani tudom.</span>
+              <span>Igazolom, hogy a megadott adatok helyesek, és tudomásul veszem, hogy a megrendelés fizetési kötelezettséggel jár.</span>
             </label>
 
             <div class="flex flex-wrap gap-3 text-sm text-slate-300">
               <button type="button" data-modal-open="returns" class="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-left transition hover:bg-white/10">Elállási jog</button>
-              <button type="button" data-modal-open="privacy" class="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-left transition hover:bg-white/10">Adatkezelés</button>
               <button type="button" data-modal-open="size-guide" class="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-left transition hover:bg-white/10">Mérettáblázat</button>
             </div>
 
@@ -302,7 +378,7 @@ const metrics = [
               </button>
 
               <button type="submit" class="rounded-full bg-orange-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-orange-400">
-                Megrendelés elküldése
+                Megrendelés elküldése fizetési kötelezettséggel
               </button>
             </div>
           </div>
@@ -400,6 +476,19 @@ const metrics = [
       <div id="legal-modal-content" class="modal-content"></div>
     </div>
   </div>
+
+  <div id="order-success-modal" class="modal-overlay hidden" aria-hidden="true">
+    <div class="modal-panel max-w-xl" role="dialog" aria-modal="true" aria-labelledby="order-success-title" aria-describedby="order-success-message">
+      <div class="modal-header">
+        <h3 id="order-success-title" class="modal-title">Köszönjük a megrendelést!</h3>
+        <button type="button" class="modal-close" data-close-order-modal aria-label="Bezárás">×</button>
+      </div>
+      <div class="modal-content">
+        <p id="order-success-message">Hamarosan e-mailben visszaigazoljuk a rendelésedet. Ha utalást választottál, az utaláshoz szükséges adatokat és a fizetendő összeget is e-mailben küldjük el. A termékek elérhetőségéről szintén értesítünk.</p>
+        <button type="button" data-close-order-modal class="mt-5 rounded-full bg-orange-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-orange-400">Bezárás</button>
+      </div>
+    </div>
+  </div>
 </Layout>
 
 <script>
@@ -473,10 +562,7 @@ const metrics = [
     applyHeaderState();
   }
 
-  const billingToggle = document.getElementById('billing-toggle') as HTMLInputElement | null;
-  const billingAddress = document.getElementById('billing-address');
-
-  const setFieldState = (field, isValid, message = 'Kötelező és helyes adat szükséges') => {
+  const setFieldState = (field: HTMLInputElement | null, isValid: boolean, message = 'Kötelező és helyes adat szükséges') => {
     if (!field) return;
 
     field.setAttribute('aria-invalid', String(!isValid));
@@ -487,40 +573,67 @@ const metrics = [
     field.classList.toggle('focus:border-red-400', !isValid);
   };
 
-  if (billingToggle && billingAddress) {
-    const syncBillingState = () => {
-      billingAddress.classList.toggle('hidden', !billingToggle.checked);
-      if (billingToggle.checked) {
-        validateBillingFields();
-      } else {
-        ['billing-city', 'billing-zip', 'billing-address-line'].forEach((id) => {
-          const field = document.getElementById(id);
-          if (field) {
-            setFieldState(field, true, '');
-          }
-        });
-      }
-    };
-
-    billingToggle.addEventListener('change', syncBillingState);
-    syncBillingState();
-  }
-
   const checkoutForm = document.getElementById('checkout-form') as HTMLFormElement | null;
   const checkoutBaseStep = document.getElementById('checkout-base-step');
   const checkoutSummaryStep = document.getElementById('checkout-summary-step');
   const toSummaryButton = document.getElementById('to-summary-button');
   const backToBaseButton = document.getElementById('back-to-base-button');
-  const productCodeInput = document.getElementById('product-code-input');
+  const productCodeInput = document.getElementById('product-code-input') as HTMLInputElement | null;
   const productCodeList = document.getElementById('product-code-list');
   const summaryBaseData = document.getElementById('summary-base-data');
   const summaryProductList = document.getElementById('summary-product-list');
+  const summaryDeliveryData = document.getElementById('summary-delivery-data');
+  const summaryCostData = document.getElementById('summary-cost-data');
+  const shippingAddressFields = document.getElementById('shipping-address-fields');
+  const shippingAddressChoice = document.getElementById('shipping-address-choice');
+  const lockerLocationFields = document.getElementById('locker-location-fields');
+  const shippingAddressInputs = ['shipping-city', 'shipping-zip', 'shipping-address']
+    .map((id) => document.getElementById(id) as HTMLInputElement | null)
+    .filter((field): field is HTMLInputElement => field !== null);
+  const lockerLocationInputs = ['locker-name', 'locker-city', 'locker-zip', 'locker-address']
+    .map((id) => document.getElementById(id) as HTMLInputElement | null)
+    .filter((field): field is HTMLInputElement => field !== null);
+  const shippingAddressDiffInputs = Array.from(
+    document.querySelectorAll<HTMLInputElement>('input[name="shippingAddressDiffers"]'),
+  );
+  const deliveryInputs = Array.from(document.querySelectorAll<HTMLInputElement>('input[name="deliveryMethod"]'));
   const orderConfirmation = document.getElementById('order-confirmation') as HTMLInputElement | null;
+  const termsAcceptance = document.getElementById('terms-acceptance') as HTMLInputElement | null;
+  termsAcceptance?.addEventListener('change', () => termsAcceptance.setCustomValidity(''));
+  orderConfirmation?.addEventListener('change', () => orderConfirmation.setCustomValidity(''));
 
   const productCodes: { id: string; code: string }[] = [];
   const PRODUCT_CODE_PATTERN = /^[A-Z0-9-]{3,20}$/;
+  const DELIVERY_OPTIONS = {
+    'gls-home': { label: 'Házhozszállítás – GLS', minFee: 2240, maxFee: 2240, locker: false },
+    'gls-locker': { label: 'Csomagautomata – GLS', minFee: 1590, maxFee: 1590, locker: true },
+    'foxpost-locker': { label: 'Csomagautomata – Foxpost', minFee: 1699, maxFee: 3699, locker: true },
+  } as const;
+  type DeliveryValue = keyof typeof DELIVERY_OPTIONS;
+  const isDeliveryValue = (value: string): value is DeliveryValue => value in DELIVERY_OPTIONS;
+  const priceFormatter = new Intl.NumberFormat('hu-HU', { useGrouping: 'always' });
+  const formatPrice = (amount: number) => `${priceFormatter.format(amount)} Ft`;
+  const formatPriceRange = (min: number, max: number) => min === max
+    ? formatPrice(min)
+    : `${priceFormatter.format(min)}–${priceFormatter.format(max)} Ft`;
+  const escapeHtml = (value: string) => {
+    const htmlEscapes: Record<string, string> = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+    };
+    return value.replace(/[&<>"']/g, (character) => htmlEscapes[character]);
+  };
+  const getSelectedDelivery = () => {
+    const selected = deliveryInputs.find((input) => input.checked);
+    return selected && isDeliveryValue(selected.value)
+      ? { value: selected.value, ...DELIVERY_OPTIONS[selected.value] }
+      : null;
+  };
 
-  const validateProductCodeInput = (field) => {
+  const validateProductCodeInput = (field: HTMLInputElement | null) => {
     if (!field) return true;
 
     const value = field.value.trim();
@@ -545,7 +658,7 @@ const metrics = [
     return true;
   };
 
-  const validateCustomField = (field) => {
+  const validateCustomField = (field: HTMLInputElement | null) => {
     if (!field) return true;
 
     const value = field.value.trim();
@@ -586,9 +699,63 @@ const metrics = [
       return isValid;
     }
 
+    if (field.id === 'locker-name') {
+      const isValid = value.length >= 2;
+      setFieldState(field, isValid, 'Add meg az automata nevét vagy azonosítóját.');
+      return isValid;
+    }
+
+    if (field.id === 'locker-city') {
+      const isValid = value.length >= 2;
+      setFieldState(field, isValid, 'Add meg az automata települését.');
+      return isValid;
+    }
+
+    if (field.id === 'locker-zip') {
+      const isValid = /^\d{4,5}$/.test(value);
+      setFieldState(field, isValid, 'Az irányítószám 4 vagy 5 számjegyből áll.');
+      return isValid;
+    }
+
+    if (field.id === 'locker-address') {
+      const isValid = value.length >= 5;
+      setFieldState(field, isValid, 'Add meg az automata pontos címét.');
+      return isValid;
+    }
+
     const isValid = value.length > 0 && field.checkValidity();
     setFieldState(field, isValid, 'Kötelező és helyes adat szükséges');
     return isValid;
+  };
+
+  const syncDeliveryFields = () => {
+    const delivery = getSelectedDelivery();
+    const isLockerDelivery = Boolean(delivery?.locker);
+    const isHomeDelivery = delivery?.value === 'gls-home';
+    const selectedAddressDifference = shippingAddressDiffInputs.find((input) => input.checked);
+    const requiresSeparateShippingAddress = isHomeDelivery && selectedAddressDifference?.value === 'yes';
+
+    shippingAddressChoice?.classList.toggle('hidden', !isHomeDelivery);
+    shippingAddressFields?.classList.toggle('hidden', !requiresSeparateShippingAddress);
+    lockerLocationFields?.classList.toggle('hidden', !isLockerDelivery);
+
+    shippingAddressDiffInputs.forEach((input) => {
+      input.disabled = !isHomeDelivery;
+    });
+
+    shippingAddressInputs.forEach((field) => {
+      field.disabled = !requiresSeparateShippingAddress;
+      field.required = requiresSeparateShippingAddress;
+      field.classList.toggle('base-required', requiresSeparateShippingAddress);
+      if (!requiresSeparateShippingAddress) setFieldState(field, true, '');
+    });
+
+    lockerLocationInputs.forEach((field) => {
+      field.disabled = !isLockerDelivery;
+      field.required = isLockerDelivery;
+      field.classList.toggle('base-required', isLockerDelivery);
+      if (!isLockerDelivery) setFieldState(field, true, '');
+    });
   };
 
   const renderProductCodes = () => {
@@ -636,33 +803,9 @@ const metrics = [
     renderProductCodes();
   };
 
-  const validateBillingFields = () => {
-    if (!billingToggle || !billingToggle.checked) {
-      ['billing-city', 'billing-zip', 'billing-address-line'].forEach((id) => {
-        const field = document.getElementById(id);
-        if (field) {
-          setFieldState(field, true, '');
-        }
-      });
-      return true;
-    }
-
-    const billingFields = ['billing-city', 'billing-zip', 'billing-address-line']
-      .map((id) => document.getElementById(id))
-      .filter(Boolean);
-
-    const valid = billingFields.every((field) => validateCustomField(field));
-    if (!valid) {
-      const firstInvalid = billingFields.find((field) => !field.checkValidity() || field.value.trim().length === 0);
-      firstInvalid?.focus();
-      firstInvalid?.reportValidity();
-    }
-    return valid;
-  };
-
   const validateBaseStep = () => {
-    const requiredFields = Array.from(document.querySelectorAll('.base-required'));
-    const firstInvalid = [];
+    const requiredFields = Array.from(document.querySelectorAll<HTMLInputElement>('.base-required'));
+    const firstInvalid: HTMLInputElement[] = [];
     let hasError = false;
 
     requiredFields.forEach((field) => {
@@ -685,12 +828,22 @@ const metrics = [
       }
     }
 
-    if (billingToggle && billingToggle.checked && !validateBillingFields()) {
+    const delivery = getSelectedDelivery();
+    if (!delivery) {
       hasError = true;
+      const deliveryInput = deliveryInputs[0];
+      deliveryInput?.focus();
+      deliveryInput?.reportValidity();
+    } else if (delivery.value === 'gls-home' && !shippingAddressDiffInputs.some((input) => input.checked)) {
+      hasError = true;
+      const addressDifferenceInput = shippingAddressDiffInputs[0];
+      if (addressDifferenceInput) firstInvalid.push(addressDifferenceInput);
+      addressDifferenceInput?.focus();
+      addressDifferenceInput?.reportValidity();
     }
 
     if (hasError) {
-      const target = firstInvalid[0] || productCodeInput || document.getElementById('billing-city');
+      const target = firstInvalid[0] || productCodeInput;
       target?.focus();
       target?.reportValidity();
       return false;
@@ -700,53 +853,92 @@ const metrics = [
   };
 
   const populateSummary = () => {
-    if (!summaryBaseData || !summaryProductList) return;
+    if (!summaryBaseData || !summaryProductList || !summaryDeliveryData || !summaryCostData) return;
 
-    const name = document.getElementById('customer-name')?.value?.trim() || 'Nincs megadva';
-    const phone = document.getElementById('customer-phone')?.value?.trim() || 'Nincs megadva';
-    const email = document.getElementById('customer-email')?.value?.trim() || 'Nincs megadva';
-    const shippingCity = document.getElementById('shipping-city')?.value?.trim() || 'Nincs megadva';
-    const shippingZip = document.getElementById('shipping-zip')?.value?.trim() || 'Nincs megadva';
-    const shippingAddress = document.getElementById('shipping-address')?.value?.trim() || 'Nincs megadva';
-    const billingCity = document.getElementById('billing-city')?.value?.trim();
-    const billingZip = document.getElementById('billing-zip')?.value?.trim();
-    const billingAddressLine = document.getElementById('billing-address-line')?.value?.trim();
+    const getInputValue = (id: string) => (document.getElementById(id) as HTMLInputElement | null)?.value.trim() || '';
+    const name = getInputValue('customer-name') || 'Nincs megadva';
+    const phone = getInputValue('customer-phone') || 'Nincs megadva';
+    const email = getInputValue('customer-email') || 'Nincs megadva';
+    const delivery = getSelectedDelivery();
+    const lockerName = (document.getElementById('locker-name') as HTMLInputElement | null)?.value.trim() || '';
+    const lockerCity = (document.getElementById('locker-city') as HTMLInputElement | null)?.value.trim() || '';
+    const lockerZip = (document.getElementById('locker-zip') as HTMLInputElement | null)?.value.trim() || '';
+    const lockerAddress = (document.getElementById('locker-address') as HTMLInputElement | null)?.value.trim() || '';
+    const shippingCity = getInputValue('shipping-city') || 'Nincs megadva';
+    const shippingZip = getInputValue('shipping-zip') || 'Nincs megadva';
+    const shippingAddress = getInputValue('shipping-address') || 'Nincs megadva';
+    const billingCity = getInputValue('billing-city');
+    const billingZip = getInputValue('billing-zip');
+    const billingAddressLine = getInputValue('billing-address-line');
+    const shippingAddressDiffers = shippingAddressDiffInputs.find((input) => input.checked)?.value === 'yes';
 
     summaryBaseData.innerHTML = `
       <div>
         <div class="text-[11px] uppercase tracking-[0.18em] text-slate-400">Név</div>
-        <div class="mt-1 text-base text-white">${name}</div>
+        <div class="mt-1 text-base text-white">${escapeHtml(name)}</div>
       </div>
       <div>
         <div class="text-[11px] uppercase tracking-[0.18em] text-slate-400">Telefonszám</div>
-        <div class="mt-1 text-base text-white">${phone}</div>
+        <div class="mt-1 text-base text-white">${escapeHtml(phone)}</div>
       </div>
       <div>
         <div class="text-[11px] uppercase tracking-[0.18em] text-slate-400">E-mail</div>
-        <div class="mt-1 text-base text-white">${email}</div>
+        <div class="mt-1 text-base text-white">${escapeHtml(email)}</div>
       </div>
       <div>
-        <div class="text-[11px] uppercase tracking-[0.18em] text-slate-400">Szállítási cím</div>
-        <div class="mt-1 text-base text-white">${shippingCity}, ${shippingZip}, ${shippingAddress}</div>
+        <div class="text-[11px] uppercase tracking-[0.18em] text-slate-400">Számlázási cím</div>
+        <div class="mt-1 text-base text-white">${escapeHtml(`${billingCity}, ${billingZip}, ${billingAddressLine}`)}</div>
       </div>
-      ${billingToggle && billingToggle.checked && billingCity && billingZip && billingAddressLine ? `
-        <div>
-          <div class="text-[11px] uppercase tracking-[0.18em] text-slate-400">Számlázási cím</div>
-          <div class="mt-1 text-base text-white">${billingCity}, ${billingZip}, ${billingAddressLine}</div>
-        </div>
-      ` : ''}
+    `;
+
+    summaryDeliveryData.innerHTML = `
+      <div>
+        <div class="text-[11px] uppercase tracking-[0.18em] text-slate-400">Átvétel módja</div>
+        <div class="mt-1 text-base text-white">${escapeHtml(delivery?.label || 'Nincs kiválasztva')}</div>
+      </div>
+      <div>
+        <div class="text-[11px] uppercase tracking-[0.18em] text-slate-400">${delivery?.locker ? 'Automata címe' : 'Szállítási cím'}</div>
+        <div class="mt-1 text-base text-white">${
+          delivery?.locker
+            ? escapeHtml(`${lockerName}, ${lockerCity}, ${lockerZip}, ${lockerAddress}`)
+            : shippingAddressDiffers
+              ? escapeHtml(`${shippingCity}, ${shippingZip}, ${shippingAddress}`)
+              : 'Megegyezik a számlázási címmel'
+        }</div>
+      </div>
     `;
 
     summaryProductList.innerHTML = productCodes.map((item) => `
       <div class="rounded-2xl border border-white/10 bg-slate-900/80 p-3">
         <div class="flex items-center justify-between gap-3">
-          <span class="font-medium text-white">${item.code}</span>
+          <span class="font-medium text-white">${escapeHtml(item.code)}</span>
         </div>
       </div>
     `).join('');
+
+    const selectedPayment = checkoutForm?.querySelector<HTMLInputElement>('input[name="paymentMethod"]:checked');
+    const paymentFee = selectedPayment?.value === 'afterpay' ? 300 : 0;
+    const deliveryFeeMin = delivery?.minFee ?? 0;
+    const deliveryFeeMax = delivery?.maxFee ?? 0;
+
+    summaryCostData.innerHTML = `
+      <div class="flex items-center justify-between gap-4">
+        <span>Szállítás</span>
+        <span class="font-medium text-white">${formatPriceRange(deliveryFeeMin, deliveryFeeMax)}</span>
+      </div>
+      <div class="mt-2 flex items-center justify-between gap-4">
+        <span>Fizetési díj</span>
+        <span class="font-medium text-white">${paymentFee ? formatPrice(paymentFee) : 'Díjmentes'}</span>
+      </div>
+      <div class="mt-3 flex items-center justify-between gap-4 border-t border-white/10 pt-3 text-base font-semibold text-white">
+        <span>Szállítás + fizetés díja</span>
+        <span>${formatPriceRange(deliveryFeeMin + paymentFee, deliveryFeeMax + paymentFee)}</span>
+      </div>
+      ${delivery?.value === 'foxpost-locker' ? '<p class="mt-3 text-xs text-slate-400">A Foxpost végleges díja a csomag méretétől függ.</p>' : ''}
+    `;
   };
 
-  const setCheckoutStep = (isSummaryStep) => {
+  const setCheckoutStep = (isSummaryStep: boolean) => {
     if (checkoutBaseStep) {
       checkoutBaseStep.classList.toggle('hidden', isSummaryStep);
     }
@@ -778,18 +970,34 @@ const metrics = [
     });
   }
 
-  document.querySelectorAll('.base-required, #billing-city, #billing-zip, #billing-address-line').forEach((field) => {
+  document.querySelectorAll<HTMLInputElement>('.base-required').forEach((field) => {
     field.addEventListener('input', () => validateCustomField(field));
     field.addEventListener('blur', () => validateCustomField(field));
   });
 
-  if (document.getElementById('add-product-code')) {
-    document.getElementById('add-product-code').addEventListener('click', addProductCode);
-  }
+  deliveryInputs.forEach((input) => input.addEventListener('change', syncDeliveryFields));
+  shippingAddressDiffInputs.forEach((input) => input.addEventListener('change', syncDeliveryFields));
+  [...shippingAddressInputs, ...lockerLocationInputs].forEach((input) => {
+    input.addEventListener('input', () => validateCustomField(input));
+    input.addEventListener('blur', () => {
+      if (input.required) validateCustomField(input);
+    });
+  });
+  syncDeliveryFields();
+
+  document.querySelectorAll<HTMLInputElement>('input[name="paymentMethod"]').forEach((input) => {
+    input.addEventListener('change', () => {
+      if (checkoutSummaryStep && !checkoutSummaryStep.classList.contains('hidden')) populateSummary();
+    });
+  });
+
+  const addProductCodeButton = document.getElementById('add-product-code') as HTMLButtonElement | null;
+  addProductCodeButton?.addEventListener('click', addProductCode);
 
   if (productCodeList) {
     productCodeList.addEventListener('click', (event) => {
-      const button = event.target.closest('[data-remove-code]');
+      if (!(event.target instanceof Element)) return;
+      const button = event.target.closest<HTMLButtonElement>('[data-remove-code]');
       if (!button) return;
 
       const itemId = button.getAttribute('data-remove-code');
@@ -816,12 +1024,32 @@ const metrics = [
   const legalModalOverlay = document.getElementById('legal-modal-overlay');
   const legalModalTitle = document.getElementById('legal-modal-title');
   const legalModalContent = document.getElementById('legal-modal-content');
+  const orderSuccessModal = document.getElementById('order-success-modal');
 
   const closeModal = () => {
     if (!legalModalOverlay) return;
     legalModalOverlay.classList.add('hidden');
     legalModalOverlay.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('modal-open');
+    if (orderSuccessModal?.classList.contains('hidden')) {
+      document.body.classList.remove('modal-open');
+    }
+  };
+
+  const openOrderSuccessModal = () => {
+    if (!orderSuccessModal) return;
+    orderSuccessModal.classList.remove('hidden');
+    orderSuccessModal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+    orderSuccessModal.querySelector<HTMLButtonElement>('[data-close-order-modal]')?.focus();
+  };
+
+  const closeOrderSuccessModal = () => {
+    if (!orderSuccessModal) return;
+    orderSuccessModal.classList.add('hidden');
+    orderSuccessModal.setAttribute('aria-hidden', 'true');
+    if (legalModalOverlay?.classList.contains('hidden')) {
+      document.body.classList.remove('modal-open');
+    }
   };
 
   closeModal();
@@ -885,8 +1113,9 @@ const metrics = [
         </div>
         <div class="legal-block">
           <h4>1.6. Termékárak és szállítás</h4>
-          <p>A megvásárolt termékeket GLS-sel vagy Foxposttal juttatjuk el a vásárlókhoz. A termékek ára tárgyi adómentes, magyar forintban értendő, és nem tartalmazza a házhozszállítás díját. A termékek készleten vannak; a csomag feladása a vásárlást követő 24 órán belül megtörténik. A felhasználó a megrendelés végén választhatja ki az átvétel módját.</p>
+          <p>A termékek ára tárgyi adómentes, magyar forintban értendő, és nem tartalmazza a szállítás díját. A vásárló GLS házhozszállítást (2 240 Ft), GLS csomagautomatát (1 590 Ft) vagy Foxpost csomagautomatát (1 699–3 699 Ft, a csomag méretétől függően) választhat. Utánvét esetén további 300 Ft díj fizetendő; az előre utalás díjmentes. A Foxpost végleges díját a csomag mérete alapján a rendelés visszaigazolásakor egyeztetjük.</p>
           <p>A szállítási díjat minden esetben a megrendelő viseli. Ha a kézbesítés a megrendelő hibájából hiúsul meg – például hibás cím megadása, a kézbesítéskor való távollét vagy a vételár kifizetésének elmaradása miatt –, a megrendelő köteles megtéríteni az ismételt kiszállítás díját.</p>
+          <p>A rendelés beérkezése után ellenőrizzük a termékek elérhetőségét. Ha valamelyik termék nem elérhető, erről e-mailben tájékoztatjuk a vásárlót, és egyeztetjük a további teendőket. Az utaláshoz szükséges adatokat és a pontos fizetendő összeget e-mailben küldjük el.</p>
           <p>A szállítmány érkezésekor kérjük, győződjön meg a csomag sértetlenségéről. Reklamációt kárjegyzőkönyv alapján tudunk kezelni.</p>
         </div>
         <div class="legal-block">
@@ -899,7 +1128,7 @@ const metrics = [
         </div>
         <div class="legal-block">
           <h4>1.9. A rendelés menete</h4>
-          <p>A vásárló a „Vásárlás” fülön megadja a megrendelni kívánt termékek kódját vagy kódjait, majd elfogadja az ÁSZF-et, és igazolja, hogy megismerte az adatkezelési tájékoztatót, valamint a mérettáblázatot. Kiválasztja a fizetési módot – előre utalást vagy a kiszállítást teljesítő cég futáránál történő utánvétet –, továbbá megadja a szükséges adatokat: nevét, telefonszámát, e-mail-címét és szállítási címét.</p>
+          <p>A vásárló a „Vásárlás” fülön megadja a megrendelni kívánt termékek kódját vagy kódjait, kiválasztja a szállítási módot, automata esetén megadja az automata nevét és címét, majd ellenőrzi az összesítőben szereplő adatokat és díjakat. Kiválasztja a fizetési módot – a 300 Ft díjú utánvétet vagy a díjmentes előre utalást –, továbbá megadja a szükséges elérhetőségeket. Az utaláshoz szükséges adatokat és a pontos fizetendő összeget e-mailben küldjük el.</p>
         </div>
         <div class="legal-block">
           <h4>1.10. Adatbeviteli hibák javítása</h4>
@@ -1028,7 +1257,10 @@ const metrics = [
     }
   };
 
-  const openModal = (key) => {
+  type LegalModalKey = keyof typeof modalMap;
+  const isLegalModalKey = (key: string | undefined): key is LegalModalKey =>
+    Boolean(key && Object.prototype.hasOwnProperty.call(modalMap, key));
+  const openModal = (key: LegalModalKey) => {
     const config = modalMap[key];
     if (!config || !legalModalOverlay || !legalModalContent || !legalModalTitle) return;
 
@@ -1039,8 +1271,11 @@ const metrics = [
     document.body.classList.add('modal-open');
   };
 
-  document.querySelectorAll('[data-modal-open]').forEach((button) => {
-    button.addEventListener('click', () => openModal(button.dataset.modalOpen));
+  document.querySelectorAll<HTMLButtonElement>('[data-modal-open]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const key = button.dataset.modalOpen;
+      if (isLegalModalKey(key)) openModal(key);
+    });
   });
 
   if (legalModalOverlay) {
@@ -1056,9 +1291,20 @@ const metrics = [
   });
 
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && legalModalOverlay && !legalModalOverlay.classList.contains('hidden')) {
-      closeModal();
+    if (event.key === 'Escape') {
+      if (orderSuccessModal && !orderSuccessModal.classList.contains('hidden')) {
+        closeOrderSuccessModal();
+      } else if (legalModalOverlay && !legalModalOverlay.classList.contains('hidden')) {
+        closeModal();
+      }
     }
+  });
+
+  orderSuccessModal?.addEventListener('click', (event) => {
+    if (event.target === orderSuccessModal) closeOrderSuccessModal();
+  });
+  document.querySelectorAll('[data-close-order-modal]').forEach((button) => {
+    button.addEventListener('click', closeOrderSuccessModal);
   });
 
   if (checkoutForm) {
@@ -1069,8 +1315,15 @@ const metrics = [
       event.preventDefault();
 
       if (!validateBaseStep()) return;
+      if (!termsAcceptance || !termsAcceptance.checked) {
+        termsAcceptance?.setCustomValidity('A rendelés elküldéséhez el kell fogadnod az ÁSZF-et.');
+        termsAcceptance?.reportValidity();
+        return;
+      }
+      termsAcceptance.setCustomValidity('');
+
       if (!orderConfirmation || !orderConfirmation.checked) {
-        orderConfirmation?.setCustomValidity('Fogadd el az adatmezőket és a rendelés elfogadását.');
+        orderConfirmation?.setCustomValidity('Erősítsd meg, hogy az adatok helyesek, és tudomásul vetted a fizetési kötelezettséget.');
         orderConfirmation?.reportValidity();
         return;
       }
@@ -1084,12 +1337,19 @@ const metrics = [
 
       const formData = new FormData(checkoutForm);
       formData.set('product_codes', productCodes.map((item) => item.code).join(', '));
-      formData.set('payment_method', formData.get('paymentMethod') === 'bank' ? 'Előre utalás' : 'Utánvét');
+      const delivery = getSelectedDelivery();
+      const paymentMethod = formData.get('paymentMethod') === 'bank' ? 'Fizetés utalással' : 'Utánvét';
+      const paymentFee = paymentMethod === 'Utánvét' ? 300 : 0;
+      formData.set('delivery_method', delivery?.label || 'Nincs kiválasztva');
+      formData.set('shipping_fee', delivery ? formatPriceRange(delivery.minFee, delivery.maxFee) : 'Nincs megadva');
+      formData.set('payment_method', paymentMethod);
+      formData.set('payment_fee', paymentFee ? formatPrice(paymentFee) : 'Díjmentes');
+      formData.set(
+        'shipping_and_payment_fees',
+        delivery ? formatPriceRange(delivery.minFee + paymentFee, delivery.maxFee + paymentFee) : 'Nincs megadva',
+      );
+      formData.delete('deliveryMethod');
       formData.delete('paymentMethod');
-
-      if (!billingToggle?.checked) {
-        ['billing_city', 'billing_postal_code', 'billing_address'].forEach((field) => formData.delete(field));
-      }
 
       let orderSubmitted = false;
 
@@ -1105,7 +1365,8 @@ const metrics = [
         }
 
         orderSubmitted = true;
-        checkoutFormStatus.textContent = 'Köszönjük, a rendelésedet elküldtük.';
+        checkoutFormStatus.textContent = 'A rendelésedet sikeresen elküldtük.';
+        openOrderSuccessModal();
       } catch {
         checkoutFormStatus.textContent = 'A rendelés küldése nem sikerült. Kérjük, próbáld újra.';
       } finally {

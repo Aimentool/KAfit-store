@@ -1,5 +1,18 @@
 # CHANGELOG - Aimentool Master Template Clean Core Build
 
+## [KAfit Store checkout] - 2026-10-06
+
+### Hozzaadva
+- A rendelés elküldéséhez külön, kötelező ÁSZF-elfogadás és az ÁSZF közvetlen megnyitási lehetősége került az összesítőbe; a beküldési folyamat az elfogadást ellenőrzi
+- Az adatpontosságot megerősítő jelölőnégyzet jelzi a fizetési kötelezettséget, amely a rendelés gombján is egyértelműen szerepel
+- A hozzájárulási jelölőnégyzetek hiba után is újrapróbálhatóvá teszik a beküldést, amikor a vásárló bejelöli az elfogadást
+- `src/pages/index.astro` - kötelező számlázási cím került a termékkódok elé; a termékkód példája `C26110201` lett, a szállítási mód pedig a termékkódok után jelenik meg
+- Házhozszállításnál kötelező megadni, hogy a szállítási cím megegyezik-e a számlázási címmel; eltérő cím esetén külön címmezők jelennek meg
+- Csomagautomatánál az automata neve, települése, irányítószáma és pontos címe külön-külön kötelező mező
+- `src/pages/index.astro` - GLS házhozszállítás és GLS/Foxpost csomagautomata választás díjakkal; automatánál külön kötelező mezők a névhez, településhez, irányítószámhoz és címhez
+- A rendelési összesítő megjeleníti a kiválasztott szállítási és fizetési módot, valamint ezek díját; az utánvét díja 300 Ft, az utalás díjmentes
+- Sikeres rendelésküldés után bezárható visszaigazoló ablak jelenik meg az utalási adatok és a termékelérhetőség e-mailes visszaigazolásáról
+
 ## [2.4.2] - 2026-03-28
 
 ### Hozzaadva
